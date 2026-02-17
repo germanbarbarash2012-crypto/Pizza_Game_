@@ -1,0 +1,2161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐘 Покорми Слона Пиццой!</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ===== SITE STYLES ===== */
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+:root {
+  --red:#FF3B3B; --yellow:#FFD93D; --orange:#FF8C00;
+  --green:#06D6A0; --blue:#118AB2; --dark:#1A1A2E;
+}
+body { font-family:"Nunito",sans-serif; background:var(--dark); color:white; overflow-x:hidden; }
+body.game-mode { background:linear-gradient(135deg,#ffeaa7,#fdcb6e); font-family:"Comic Sans MS",cursive; }
+
+/* NAV */
+nav { position:fixed; top:0; left:0; right:0; z-index:998; padding:18px 50px; display:flex; align-items:center; justify-content:space-between; background:rgba(26,26,46,0.92); backdrop-filter:blur(20px); border-bottom:1px solid rgba(255,255,255,0.06); }
+.logo { font-family:"Fredoka One",cursive; font-size:1.6em; background:linear-gradient(135deg,var(--yellow),var(--orange)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.nav-links { display:flex; gap:30px; list-style:none; }
+.nav-links a { color:rgba(255,255,255,0.7); text-decoration:none; font-weight:700; transition:color 0.3s; }
+.nav-links a:hover { color:var(--yellow); }
+.nav-play { background:linear-gradient(135deg,var(--red),var(--orange)) !important; -webkit-text-fill-color:white !important; padding:10px 24px; border-radius:50px; color:white !important; box-shadow:0 4px 20px rgba(255,59,59,0.4); transition:transform 0.3s,box-shadow 0.3s !important; }
+.nav-play:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(255,59,59,0.6) !important; }
+
+/* HERO */
+.hero { min-height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; padding:120px 30px 80px; position:relative; overflow:hidden; }
+.hero-bg { position:absolute; inset:0; background:radial-gradient(circle at 20% 50%,rgba(255,61,61,0.15),transparent 50%),radial-gradient(circle at 80% 30%,rgba(255,217,61,0.1),transparent 50%); }
+.hero-content { position:relative; z-index:2; max-width:850px; }
+.hero-badge { display:inline-block; background:rgba(255,217,61,0.15); border:1px solid rgba(255,217,61,0.4); color:var(--yellow); padding:7px 18px; border-radius:50px; font-size:0.85em; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:25px; }
+.hero-emoji { font-size:5em; display:block; margin-bottom:15px; animation:bounce 2s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+.hero h1 { font-family:"Fredoka One",cursive; font-size:clamp(2.5em,7vw,5.5em); line-height:1.1; margin-bottom:20px; }
+.hero h1 .r { color:var(--red); } .hero h1 .y { color:var(--yellow); }
+.hero-desc { color:rgba(255,255,255,0.65); font-size:1.15em; max-width:580px; margin:0 auto 40px; line-height:1.7; font-weight:600; }
+.hero-btns { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:60px; }
+.btn-big { padding:16px 40px; border-radius:50px; font-size:1.15em; font-weight:800; text-decoration:none; transition:all 0.3s; cursor:pointer; border:none; font-family:inherit; }
+.btn-big-red { background:linear-gradient(135deg,var(--red),var(--orange)); color:white; box-shadow:0 8px 30px rgba(255,59,59,0.4); }
+.btn-big-red:hover { transform:translateY(-3px) scale(1.03); box-shadow:0 15px 40px rgba(255,59,59,0.6); }
+.btn-big-outline { background:rgba(255,255,255,0.07); color:white; border:2px solid rgba(255,255,255,0.2); }
+.btn-big-outline:hover { background:rgba(255,255,255,0.14); transform:translateY(-3px); }
+.hero-stats { display:flex; justify-content:center; gap:50px; }
+.hstat-n { font-family:"Fredoka One",cursive; font-size:2.2em; color:var(--yellow); display:block; }
+.hstat-l { color:rgba(255,255,255,0.45); font-size:0.8em; font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+
+/* FEATURES */
+.features { padding:100px 40px; }
+.sec-tag { display:inline-block; background:rgba(6,214,160,0.15); border:1px solid rgba(6,214,160,0.4); color:var(--green); padding:6px 16px; border-radius:50px; font-size:0.78em; font-weight:800; text-transform:uppercase; letter-spacing:2px; margin-bottom:15px; }
+.sec-title { font-family:"Fredoka One",cursive; font-size:clamp(1.8em,4vw,3em); margin-bottom:12px; }
+.sec-sub { color:rgba(255,255,255,0.45); font-size:1em; font-weight:600; line-height:1.6; max-width:480px; }
+.features-hdr { text-align:center; margin-bottom:60px; }
+.features-hdr .sec-sub { margin:0 auto; }
+.feat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:1100px; margin:0 auto; }
+.feat-card { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:20px; padding:35px 28px; transition:all 0.35s; position:relative; overflow:hidden; }
+.feat-card::before { content:""; position:absolute; top:0;left:0;right:0; height:3px; background:var(--cc,var(--red)); opacity:0; transition:opacity 0.35s; }
+.feat-card:hover { background:rgba(255,255,255,0.07); transform:translateY(-5px); }
+.feat-card:hover::before { opacity:1; }
+.feat-icon { font-size:3em; margin-bottom:18px; display:block; }
+.feat-title { font-family:"Fredoka One",cursive; font-size:1.4em; margin-bottom:10px; }
+.feat-desc { color:rgba(255,255,255,0.5); line-height:1.65; font-size:0.92em; font-weight:600; }
+
+/* HOW TO */
+.howto { padding:100px 40px; background:rgba(255,255,255,0.02); }
+.howto-inner { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.steps { margin-top:40px; display:flex; flex-direction:column; gap:20px; }
+.step { display:flex; gap:20px; align-items:flex-start; padding:20px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:14px; transition:all 0.3s; }
+.step:hover { background:rgba(255,255,255,0.06); transform:translateX(6px); }
+.step-n { width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg,var(--red),var(--orange)); display:flex; align-items:center; justify-content:center; font-family:"Fredoka One",cursive; font-size:1.3em; flex-shrink:0; box-shadow:0 4px 15px rgba(255,59,59,0.4); }
+.step h4 { font-weight:800; margin-bottom:4px; }
+.step p { color:rgba(255,255,255,0.45); font-size:0.88em; line-height:1.55; font-weight:600; }
+.pizza-vis { position:relative; text-align:center; }
+.pizza-spin { width:320px; height:320px; border-radius:50%; background:radial-gradient(circle,#FFE4B5,#F4A460); margin:0 auto; position:relative; box-shadow:0 0 0 14px rgba(244,164,96,0.25),0 25px 70px rgba(0,0,0,0.5); animation:spin 18s linear infinite; }
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.pt { position:absolute; font-size:2.2em; animation:spin 18s linear infinite reverse; }
+.pt:nth-child(1){top:18%;left:14%} .pt:nth-child(2){top:10%;right:18%}
+.pt:nth-child(3){bottom:18%;left:18%} .pt:nth-child(4){bottom:14%;right:14%}
+.pt:nth-child(5){top:44%;left:7%} .pt:nth-child(6){top:48%;right:7%}
+.elephant-vis { position:absolute; bottom:-25px; right:-20px; font-size:4.5em; filter:drop-shadow(0 8px 25px rgba(0,0,0,0.5)); animation:bounce 2s ease-in-out infinite; }
+
+/* CTA */
+.cta { padding:100px 40px; text-align:center; position:relative; overflow:hidden; }
+.cta-bg { position:absolute; inset:0; background:radial-gradient(circle at 30% 50%,rgba(255,59,59,0.18),transparent 50%),radial-gradient(circle at 70% 50%,rgba(255,217,61,0.12),transparent 50%); }
+.cta-content { position:relative; z-index:2; }
+.cta h2 { font-family:"Fredoka One",cursive; font-size:clamp(2em,5vw,4em); margin-bottom:15px; line-height:1.15; }
+.cta p { color:rgba(255,255,255,0.55); font-size:1.1em; font-weight:600; margin-bottom:40px; }
+.pizza-row { font-size:2.8em; letter-spacing:8px; margin-bottom:40px; animation:bounce 2s ease-in-out infinite; }
+
+/* FOOTER */
+footer { padding:35px 50px; border-top:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:15px; }
+.foot-logo { font-family:"Fredoka One",cursive; font-size:1.4em; background:linear-gradient(135deg,var(--yellow),var(--orange)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.foot-txt { color:rgba(255,255,255,0.3); font-size:0.88em; font-weight:600; }
+
+/* REVEAL */
+.reveal { opacity:0; transform:translateY(35px); transition:all 0.75s cubic-bezier(0.16,1,0.3,1); }
+.reveal.vis { opacity:1; transform:translateY(0); }
+
+/* GAME SECTION */
+#gameSection { display:none; }
+
+/* ===== GAME STYLES ===== */
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Comic Sans MS',cursive; background:linear-gradient(135deg,#ffeaa7,#fdcb6e); min-height:100vh; padding:20px; }
+.hidden { display:none !important; }
+
+/* AUTH */
+#authScreen { position:fixed; inset:0; background:rgba(0,0,0,0.85); display:flex; align-items:center; justify-content:center; z-index:9999; }
+.auth-box { background:white; padding:40px; border-radius:20px; width:380px; max-width:95vw; box-shadow:0 20px 60px rgba(0,0,0,0.4); }
+.auth-box h2 { text-align:center; color:#d63031; margin-bottom:20px; font-size:1.8em; }
+.auth-tabs { display:flex; gap:10px; margin-bottom:20px; }
+.auth-tab { flex:1; padding:12px; background:#dfe6e9; border:none; border-radius:10px; cursor:pointer; font-size:1em; font-weight:700; font-family:inherit; transition:all 0.3s; }
+.auth-tab.active { background:#d63031; color:white; }
+.auth-form { display:none; flex-direction:column; gap:12px; }
+.auth-form.active { display:flex; }
+.auth-form input { padding:12px; border:2px solid #dfe6e9; border-radius:10px; font-size:1em; font-family:inherit; outline:none; }
+.auth-form input:focus { border-color:#d63031; }
+.auth-form button { padding:14px; background:#00b894; color:white; border:none; border-radius:10px; font-size:1.1em; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.3s; }
+.auth-form button:hover { background:#00a383; transform:scale(1.02); }
+.msg { padding:10px; border-radius:8px; text-align:center; font-weight:700; display:none; }
+.msg.show { display:block; }
+.msg.error { background:#ff7675; color:white; }
+.msg.success { background:#00b894; color:white; }
+
+/* GAME */
+#gameScreen { display:none; max-width:1100px; margin:0 auto; }
+.header { background:white; padding:20px; border-radius:20px; text-align:center; margin-bottom:20px; box-shadow:0 4px 15px rgba(0,0,0,0.1); }
+.header h1 { font-size:2em; color:#d63031; margin-bottom:10px; }
+.stats { display:flex; justify-content:center; gap:20px; flex-wrap:wrap; }
+.stat { background:#ffeaa7; padding:8px 20px; border-radius:15px; font-weight:700; }
+.tabs { display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
+.tab { flex:1; min-width:100px; padding:12px; background:white; border:none; border-radius:12px; cursor:pointer; font-size:1em; font-weight:700; font-family:inherit; box-shadow:0 3px 10px rgba(0,0,0,0.1); transition:all 0.3s; }
+.tab.active { background:#d63031; color:white; transform:translateY(-2px); }
+.panel { display:none; background:white; padding:25px; border-radius:20px; box-shadow:0 4px 15px rgba(0,0,0,0.1); min-height:400px; }
+.panel.active { display:block; }
+.btn { padding:10px 20px; border:none; border-radius:10px; font-size:1em; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.3s; }
+.btn:hover { transform:scale(1.05); opacity:0.9; }
+.btn-green { background:#00b894; color:white; }
+.btn-red { background:#d63031; color:white; }
+.btn-blue { background:#0984e3; color:white; }
+
+/* PIZZA */
+.pizza-wrap { display:flex; flex-direction:column; align-items:center; }
+.pizza-circle { width:280px; height:280px; border-radius:50%; background:radial-gradient(circle,#FFE4B5,#F4A460); border:6px solid #8B4513; position:relative; overflow:hidden; margin:20px auto; box-shadow:0 8px 25px rgba(0,0,0,0.2); transition: transform 0.5s, opacity 0.5s; }
+
+/* OVEN ANIMATION */
+#ovenOverlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9998; flex-direction:column; align-items:center; justify-content:center; }
+#ovenOverlay.show { display:flex; }
+.oven-box { background:#2d2d2d; border-radius:24px; padding:40px; text-align:center; width:340px; box-shadow:0 20px 60px rgba(0,0,0,0.6); border:3px solid #444; }
+.oven-top { font-size:1em; color:#aaa; margin-bottom:10px; font-family:"Comic Sans MS",cursive; font-weight:700; }
+.oven-door { width:220px; height:220px; background:#111; border-radius:16px; margin:0 auto 20px; border:4px solid #555; position:relative; overflow:hidden; }
+.oven-glass { position:absolute; inset:8px; border-radius:10px; background:rgba(255,100,0,0.08); border:2px solid rgba(255,150,0,0.2); overflow:hidden; }
+.oven-fire { position:absolute; bottom:0; left:0; right:0; height:60px; background:linear-gradient(to top,#ff4500,#ff8c00,transparent); opacity:0; border-radius:0 0 10px 10px; animation:fireFlicker 0.3s ease-in-out infinite alternate; }
+@keyframes fireFlicker { 0%{opacity:0.6;height:55px} 100%{opacity:1;height:70px} }
+.oven-pizza { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:5em; transition:all 0.5s; }
+.oven-temp { color:#ff8c00; font-size:1.3em; font-weight:700; font-family:"Comic Sans MS",cursive; margin-bottom:15px; }
+.oven-progress-wrap { background:#444; border-radius:20px; height:18px; overflow:hidden; margin-bottom:15px; }
+.oven-progress { height:100%; width:0%; background:linear-gradient(90deg,#ff4500,#ff8c00,#ffd700); border-radius:20px; transition:width 0.1s linear; }
+.oven-status { color:white; font-size:1em; font-family:"Comic Sans MS",cursive; font-weight:700; min-height:28px; }
+.oven-sparks { position:absolute; inset:0; pointer-events:none; }
+.spark { position:absolute; width:4px; height:4px; border-radius:50%; background:#ffd700; animation:sparkFly 0.8s ease-out forwards; }
+@keyframes sparkFly {
+  0%   { transform:translate(0,0) scale(1); opacity:1; }
+  100% { transform:translate(var(--sx),var(--sy)) scale(0); opacity:0; }
+}
+.topping { position:absolute; font-size:1.8em; pointer-events:none; transform:translate(-50%,-50%); }
+.ing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin:15px 0; width:100%; max-width:500px; }
+.ing-btn { padding:18px 12px; background:white; border:2px solid #ddd; border-radius:12px; cursor:pointer; font-size:1.8em; text-align:center; transition:all 0.3s; font-family:inherit; }
+.ing-btn:hover:not(:disabled) { transform:scale(1.1); border-color:#d63031; background:#fff5f5; }
+.ing-btn:disabled { opacity:0.3; cursor:not-allowed; }
+.ing-btn .cnt { font-size:0.4em; display:block; }
+.cook-btns { display:flex; gap:10px; }
+
+/* SHOP / INV */
+.item-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:15px; }
+.item-card { background:#f8f9fa; padding:15px; border-radius:12px; text-align:center; }
+.item-icon { font-size:2.5em; margin-bottom:8px; }
+.item-name { font-weight:700; margin-bottom:4px; font-size:0.9em; }
+.item-price { color:#f39c12; font-weight:700; margin-bottom:8px; }
+
+/* ORDERS */
+.order-card { background:linear-gradient(135deg,#74b9ff,#0984e3); color:white; padding:18px; border-radius:14px; margin-bottom:12px; }
+.order-card.active-order { background:linear-gradient(135deg,#55efc4,#00b894); }
+.order-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.order-reward { background:rgba(255,255,255,0.3); padding:5px 12px; border-radius:8px; font-weight:700; }
+.order-recipe { background:rgba(255,255,255,0.2); padding:8px; border-radius:8px; margin-bottom:10px; font-size:0.9em; }
+
+/* PROFILE */
+.profile-center { text-align:center; margin-bottom:25px; }
+.avatar { font-size:5em; cursor:pointer; display:inline-block; transition:transform 0.3s; }
+.avatar:hover { transform:scale(1.1); }
+.player-name { font-size:1.8em; font-weight:700; margin:10px 0; }
+.sticker-section { margin-top:20px; }
+.sticker-grid-wrap { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; padding:15px; background:#f8f9fa; border-radius:12px; max-height:300px; overflow-y:auto; }
+.sticker-item { font-size:1.8em; text-align:center; padding:6px; cursor:pointer; border-radius:8px; border:2px solid transparent; transition:all 0.2s; }
+.sticker-item:hover { background:#ffeaa7; transform:scale(1.2); }
+.confirm-box { background:#fff3cd; border:2px solid #ffc107; border-radius:12px; padding:20px; text-align:center; margin-bottom:15px; }
+.confirm-box p { font-size:1.1em; font-weight:700; margin-bottom:12px; }
+.confirm-btns { display:flex; gap:10px; justify-content:center; }
+
+/* FRIENDS */
+.search-row { display:flex; gap:10px; margin-bottom:20px; }
+.search-row input { flex:1; padding:11px; border:2px solid #ddd; border-radius:10px; font-size:1em; font-family:inherit; outline:none; }
+.search-row input:focus { border-color:#0984e3; }
+.friend-card { background:#f8f9fa; padding:13px; border-radius:12px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; }
+.friend-card.request { background:#fff3cd; border:2px solid #ffc107; }
+.friend-left { display:flex; align-items:center; gap:12px; }
+.friend-avatar { font-size:2.2em; }
+.friend-name { font-weight:700; }
+.friend-stars { color:#b2bec3; font-size:0.85em; }
+.empty { text-align:center; padding:50px 20px; color:#b2bec3; }
+.empty-icon { font-size:3.5em; margin-bottom:15px; }
+
+/* CLANS */
+.clan-box { background:linear-gradient(135deg,#667eea,#764ba2); padding:25px; border-radius:15px; color:white; margin-bottom:20px; }
+.clan-box-header { text-align:center; margin-bottom:20px; }
+.clan-big-emoji { font-size:4em; display:block; margin-bottom:8px; }
+.clan-big-name { font-size:1.8em; font-weight:700; margin-bottom:5px; }
+.clan-member { background:rgba(255,255,255,0.2); padding:10px 14px; border-radius:8px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; }
+.emoji-pick { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; padding:10px; background:#f8f9fa; border-radius:10px; max-height:200px; overflow-y:auto; margin:10px 0; }
+.emoji-pick div { font-size:1.8em; text-align:center; padding:6px; cursor:pointer; border-radius:8px; border:2px solid transparent; transition:all 0.2s; }
+.emoji-pick div:hover { background:#ffeaa7; transform:scale(1.15); }
+.emoji-pick div.picked { border-color:#d63031; background:#ffe0e0; }
+.create-clan-form { background:#f8f9fa; padding:20px; border-radius:12px; }
+.create-clan-form input { width:100%; padding:11px; border:2px solid #ddd; border-radius:10px; font-size:1em; font-family:inherit; margin-bottom:10px; outline:none; }
+.create-clan-form input:focus { border-color:#7B2FBE; }
+
+@media(max-width:900px){
+  nav{padding:14px 18px;} .nav-links{display:none;}
+  .hero{padding:90px 18px 60px;} .features{padding:70px 18px;}
+  .feat-grid{grid-template-columns:1fr;}
+  .howto{padding:70px 18px;} .howto-inner{grid-template-columns:1fr;gap:40px;}
+  .pizza-spin{width:240px;height:240px;}
+  .cta{padding:70px 18px;} footer{padding:25px 18px;justify-content:center;text-align:center;}
+  .hero-stats{gap:25px;}
+}
+</style>
+</head>
+<body id="bodyEl">
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="logo">🐘 ПиццаСлон</div>
+  <ul class="nav-links">
+    <li><a href="#features">Механики</a></li>
+    <li><a href="#howto">Как играть</a></li>
+    <li><a href="#play" class="nav-play">🍕 Играть!</a></li>
+  </ul>
+</nav>
+
+<!-- SITE SECTIONS -->
+<div id="siteContent">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🎮 Бесплатная браузерная игра</div>
+    <span class="hero-emoji">🐘🍕</span>
+    <h1>Покорми <span class="r">Слона</span><br><span class="y">Пиццой!</span></h1>
+    <p class="hero-desc">Готовь вкуснейшие пиццы, выполняй заказы голодных слонов, находи друзей и создавай легендарные кланы!</p>
+    <div class="hero-btns">
+      <button class="btn-big btn-big-red" onclick="openGame()">🍕 Играть бесплатно!</button>
+      <a href="#howto" class="btn-big btn-big-outline">Как играть?</a>
+    </div>
+    <div class="hero-stats">
+      <div><span class="hstat-n">9</span><span class="hstat-l">Ингредиентов</span></div>
+      <div><span class="hstat-n">5+</span><span class="hstat-l">Видов пицц</span></div>
+      <div><span class="hstat-n">∞</span><span class="hstat-l">Друзей и кланов</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-hdr reveal">
+    <div class="sec-tag">✨ Механики</div>
+    <h2 class="sec-title">Всё что тебя ждёт!</h2>
+    <p class="sec-sub">Полноценная игра прямо в браузере — без установки и без оплаты</p>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-card reveal" style="--cc:#FF3B3B"><span class="feat-icon">🍕</span><h3 class="feat-title">Готовка пиццы</h3><p class="feat-desc">Добавляй ингредиенты, создавай рецепты и отправляй пиццу в печь. Маргарита, Пепперони, Гавайская и многое другое!</p></div>
+    <div class="feat-card reveal" style="--cc:#FFD93D"><span class="feat-icon">🐘</span><h3 class="feat-title">Заказы слонов</h3><p class="feat-desc">Голодные слоны делают заказы — выполни их правильно и получи звёзды!</p></div>
+    <div class="feat-card reveal" style="--cc:#06D6A0"><span class="feat-icon">🛒</span><h3 class="feat-title">Магазин</h3><p class="feat-desc">Трать заработанные звёзды на новые ингредиенты для идеальной пиццы!</p></div>
+    <div class="feat-card reveal" style="--cc:#118AB2"><span class="feat-icon">👥</span><h3 class="feat-title">Реальные друзья</h3><p class="feat-desc">Регистрируйся, ищи других игроков, отправляй запросы в друзья!</p></div>
+    <div class="feat-card reveal" style="--cc:#7B2FBE"><span class="feat-icon">🏰</span><h3 class="feat-title">Кланы</h3><p class="feat-desc">Создавай кланы, выбирай эмодзи и название, приглашай друзей!</p></div>
+    <div class="feat-card reveal" style="--cc:#FF8C00"><span class="feat-icon">🎨</span><h3 class="feat-title">Уникальный стикер</h3><p class="feat-desc">Выбери свой уникальный аватар-стикер раз и навсегда из 60+ вариантов!</p></div>
+  </div>
+</section>
+
+<!-- HOW TO -->
+<section class="howto" id="howto">
+  <div class="howto-inner">
+    <div>
+      <div class="reveal">
+        <div class="sec-tag" style="background:rgba(255,217,61,0.15);border-color:rgba(255,217,61,0.4);color:var(--yellow);">🍕 Как играть</div>
+        <h2 class="sec-title">Начни за<br>5 секунд!</h2>
+        <p class="sec-sub">Никаких загрузок, никаких платежей. Просто нажми и играй!</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal"><div class="step-n">1</div><div><h4>Зарегистрируйся</h4><p>Придумай имя и пароль — аккаунт сохранится навсегда</p></div></div>
+        <div class="step reveal"><div class="step-n">2</div><div><h4>Купи ингредиенты</h4><p>Открой магазин и купи сыр, томаты и другие вкусности</p></div></div>
+        <div class="step reveal"><div class="step-n">3</div><div><h4>Прими заказ слона</h4><p>Посмотри что хочет слон и приготовь ему правильную пиццу</p></div></div>
+        <div class="step reveal"><div class="step-n">4</div><div><h4>Зарабатывай и дружи!</h4><p>Собирай звёзды, находи друзей и создавай кланы!</p></div></div>
+      </div>
+    </div>
+    <div class="pizza-vis reveal">
+      <div class="pizza-spin">
+        <div class="pt">🧀</div><div class="pt">🍅</div><div class="pt">🍄</div>
+        <div class="pt">🥓</div><div class="pt">🫒</div><div class="pt">🧅</div>
+      </div>
+      <div class="elephant-vis">🐘</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="play">
+  <div class="cta-bg"></div>
+  <div class="cta-content reveal">
+    <div class="pizza-row">🍕🐘🍕🐘🍕</div>
+    <h2>Готов кормить<br><span style="color:var(--yellow)">слонов пиццей?</span></h2>
+    <p>Присоединяйся прямо сейчас — это бесплатно и весело!</p>
+    <button class="btn-big btn-big-red" style="font-size:1.25em;padding:20px 55px;" onclick="openGame()">🍕 Начать играть!</button>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-logo">🐘 ПиццаСлон</div>
+  <div class="foot-txt">🍕 Покорми Слона Пиццой! · Бесплатная игра в браузере</div>
+  <div style="font-size:1.4em;letter-spacing:5px;">🍕🐘⭐🏰</div>
+</footer>
+</div><!-- /siteContent -->
+
+<!-- GAME SECTION -->
+<div id="gameSection">
+  <div style="padding:10px;background:rgba(26,26,46,0.95);position:sticky;top:0;z-index:997;display:flex;align-items:center;gap:15px;">
+
+
+<!-- AUTH SCREEN -->
+<div id="authScreen">
+  <div class="auth-box">
+    <h2>🐘🍕 Покорми Слона!</h2>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin">Вход</button>
+      <button class="auth-tab" id="tabRegister">Регистрация</button>
+    </div>
+    <div class="msg error" id="authError"></div>
+    <div class="msg success" id="authSuccess"></div>
+    <div class="auth-form active" id="loginForm">
+      <input type="text" id="loginUser" placeholder="Имя пользователя">
+      <input type="password" id="loginPass" placeholder="Пароль">
+      <button id="loginBtn">🔓 Войти</button>
+    </div>
+    <div class="auth-form" id="registerForm">
+      <input type="text" id="regUser" placeholder="Имя (минимум 3 символа)">
+      <input type="password" id="regPass" placeholder="Пароль (минимум 4 символа)">
+      <input type="password" id="regPass2" placeholder="Повтори пароль">
+      <button id="registerBtn">✅ Зарегистрироваться</button>
+    </div>
+  </div>
+</div>
+
+<!-- OVEN ANIMATION OVERLAY -->
+<div id="ovenOverlay">
+  <div class="oven-box">
+    <div class="oven-top">🔥 ДУХОВКА 🔥</div>
+    <div class="oven-door">
+      <div class="oven-glass">
+        <div class="oven-fire" id="ovenFire"></div>
+        <div class="oven-pizza" id="ovenPizza">🍕</div>
+        <div class="oven-sparks" id="ovenSparks"></div>
+      </div>
+    </div>
+    <div class="oven-temp" id="ovenTemp">🌡️ 200°C</div>
+    <div class="oven-progress-wrap">
+      <div class="oven-progress" id="ovenProgress"></div>
+    </div>
+    <div class="oven-status" id="ovenStatus">Разогрев духовки...</div>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="gameScreen">
+  <div class="header">
+    <h1>🐘 Покорми Слона Пиццой! 🍕</h1>
+    <div class="stats">
+      <div class="stat">⭐ Баллы: <span id="statScore">0</span></div>
+      <div class="stat">💰 Звёзды: <span id="statStars">50</span></div>
+      <div class="stat">👤 <span id="statUser">-</span></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-panel="cookPanel">🍕 Готовить</button>
+    <button class="tab" data-panel="ordersPanel">🐘 Заказы</button>
+    <button class="tab" data-panel="shopPanel">🛒 Магазин</button>
+    <button class="tab" data-panel="invPanel">📦 Инвентарь</button>
+    <button class="tab" data-panel="profilePanel">👤 Профиль</button>
+    <button class="tab" data-panel="friendsPanel">👥 Друзья</button>
+    <button class="tab" data-panel="clansPanel">🏰 Кланы</button>
+  </div>
+
+  <!-- COOKING -->
+  <div class="panel active" id="cookPanel">
+    <div class="pizza-wrap">
+      <h2 style="margin-bottom:5px;">🍕 Готовим пиццу!</h2>
+      <p id="cookHint" style="color:#b2bec3; font-size:0.9em;">Добавляй ингредиенты и нажми Готовить!</p>
+      <div class="cook-btns" style="margin-top:12px;">
+        <button class="btn btn-green" id="cookBtn">🔥 Готовить!</button>
+        <button class="btn btn-red" id="resetBtn">🔄 Сброс</button>
+      </div>
+      <div class="pizza-circle" id="pizzaCircle"></div>
+      <div class="ing-grid" id="ingGrid"></div>
+    </div>
+  </div>
+
+  <!-- ORDERS -->
+  <div class="panel" id="ordersPanel">
+    <h2 style="margin-bottom:20px;">🐘 Заказы слонов</h2>
+    <div id="ordersList"></div>
+  </div>
+
+  <!-- SHOP -->
+  <div class="panel" id="shopPanel">
+    <h2 style="margin-bottom:20px;">🛒 Магазин ингредиентов</h2>
+    <div class="item-grid" id="shopGrid"></div>
+  </div>
+
+  <!-- INVENTORY -->
+  <div class="panel" id="invPanel">
+    <h2 style="margin-bottom:20px;">📦 Мой инвентарь</h2>
+    <div class="item-grid" id="invGrid"></div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="panel" id="profilePanel">
+    <div class="profile-center">
+      <div class="avatar" id="avatarEl">🍕</div>
+      <div class="player-name" id="profileName">-</div>
+      <div id="stickerHint" style="color:#b2bec3; margin-bottom:15px;">👆 Нажми на аватар чтобы выбрать стикер</div>
+      <button class="btn btn-red" id="logoutBtn">🚪 Выйти</button>
+    </div>
+    <div class="sticker-section" id="stickerSection" style="display:none;">
+      <h3 style="margin-bottom:10px; text-align:center;">🎨 Выбери стикер</h3>
+      <div class="confirm-box" id="stickerConfirm" style="display:none;">
+        <p id="stickerConfirmText"></p>
+        <div class="confirm-btns">
+          <button class="btn btn-green" id="stickerYes">✅ Выбрать!</button>
+          <button class="btn btn-red" id="stickerNo">❌ Отмена</button>
+        </div>
+      </div>
+      <div class="sticker-grid-wrap" id="stickerGridEl"></div>
+    </div>
+  </div>
+
+  <!-- FRIENDS -->
+  <div class="panel" id="friendsPanel">
+    <h2 style="margin-bottom:15px;">👥 Друзья</h2>
+    <div class="search-row">
+      <input type="text" id="searchInput" placeholder="Найти игрока... (или оставь пустым)">
+      <button class="btn btn-blue" id="searchBtn">🔍 Найти</button>
+    </div>
+    <div id="searchResults"></div>
+    <hr style="margin:20px 0; border-color:#eee;">
+    <h3 style="margin-bottom:12px;">Мои друзья (<span id="friendsCount">0</span>)</h3>
+    <div id="friendsList"></div>
+  </div>
+
+  <!-- CLANS -->
+  <div class="panel" id="clansPanel">
+    <h2 style="margin-bottom:20px;">🏰 Мой клан</h2>
+    <div id="clanContent"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+'use strict';
+
+// ====== DATA ======
+var G = {
+  user: null,
+  data: null
+};
+
+var INGREDIENTS = [
+  {name:'Томатная паста', icon:'🍅', price:0,  hidden:true},
+  {name:'Сыр',            icon:'🧀', price:0,  hidden:true},
+  {name:'Грибы',          icon:'🍄', price:8},
+  {name:'Пепперони',      icon:'🥓', price:10},
+  {name:'Ветчина',        icon:'🍖', price:12},
+  {name:'Ананас',         icon:'🍍', price:7},
+  {name:'Лук',            icon:'🧅', price:4},
+  {name:'Оливки',         icon:'🫒', price:6},
+  {name:'Моцарелла',      icon:'🧈', price:9},
+  {name:'Перец',          icon:'🫑', price:6},
+  {name:'Кукуруза',       icon:'🌽', price:5},
+  {name:'Креветки',       icon:'🦐', price:15},
+  {name:'Яйцо',           icon:'🍳', price:8},
+  {name:'Говядина',       icon:'🥩', price:14},
+  {name:'Чили',           icon:'🌶️', price:7},
+  {name:'Бекон',          icon:'🥚', price:11},
+  {name:'Шпинат',         icon:'🌿', price:5},
+  {name:'Краб',           icon:'🦀', price:18},
+  {name:'Томаты черри',   icon:'🫐', price:6},
+  {name:'Тунец',          icon:'🐟', price:13},
+  {name:'Артишок',        icon:'🥦', price:9},
+];
+
+var RECIPES = {
+  'Маргарита':     ['Томатная паста','Сыр'],
+  'Пепперони':     ['Томатная паста','Сыр','Пепперони'],
+  'Гавайская':     ['Томатная паста','Сыр','Ананас','Ветчина'],
+  'Вегетарианская':['Томатная паста','Сыр','Грибы','Лук','Оливки'],
+  'Мясная':        ['Томатная паста','Сыр','Пепперони','Ветчина','Говядина'],
+  'Морская':       ['Томатная паста','Сыр','Креветки','Оливки'],
+  'Острая':        ['Томатная паста','Сыр','Пепперони','Чили','Перец'],
+  'Деревенская':   ['Томатная паста','Сыр','Кукуруза','Перец','Яйцо'],
+  'Краббовая':     ['Томатная паста','Сыр','Краб','Томаты черри'],
+  'Тунец':         ['Томатная паста','Сыр','Тунец','Лук','Оливки'],
+  'Зелёная':       ['Томатная паста','Сыр','Шпинат','Артишок','Перец'],
+};
+
+var ELEPHANTS = ['Джамбо','Дамбо','Элли','Хортон','Бабар','Слоник'];
+var ORDER_TYPES = [
+  {name:'Маргарита',     ings:['Томатная паста','Сыр'],                                    reward:15},
+  {name:'Пепперони',     ings:['Томатная паста','Сыр','Пепперони'],                        reward:25},
+  {name:'Гавайская',     ings:['Томатная паста','Сыр','Ананас','Ветчина'],                 reward:35},
+  {name:'Вегетарианская',ings:['Томатная паста','Сыр','Грибы','Лук'],                      reward:30},
+  {name:'Мясная',        ings:['Томатная паста','Сыр','Пепперони','Ветчина','Говядина'],   reward:45},
+  {name:'Морская',       ings:['Томатная паста','Сыр','Креветки','Оливки'],                reward:50},
+  {name:'Острая',        ings:['Томатная паста','Сыр','Пепперони','Чили','Перец'],         reward:40},
+  {name:'Деревенская',   ings:['Томатная паста','Сыр','Кукуруза','Перец','Яйцо'],         reward:35},
+  {name:'Краббовая',     ings:['Томатная паста','Сыр','Краб','Томаты черри'],              reward:55},
+  {name:'Тунец',         ings:['Томатная паста','Сыр','Тунец','Лук','Оливки'],            reward:45},
+  {name:'Зелёная',       ings:['Томатная паста','Сыр','Шпинат','Артишок','Перец'],        reward:40},
+];
+
+var CLAN_EMOJIS = ['🏰','⚔️','🛡️','👑','🔥','⚡','💎','🌟','⭐','🦁','🐉','🦅','🐺','🐯','🦈','🐲','💀','👹'];
+var STICKERS = [
+  '🍕','🐘','👨‍🍳','👸','🤴','🦸','🧙','🧛','🐶','🐱','🐭','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷',
+  '🐸','🐵','🦊','🐔','🐧','🦆','⭐','🌟','💫','✨','🔥','💧','⚡','🌈','☀️','🌙','🍔','🌭','🍗','🍖',
+  '🌮','🎮','🎯','🎲','🎨','🎭','🏆','🥇','💎','💰','👑','🎤','🎸','🎺','🦈','🐲','🚀','💣','🌊','🎪'
+];
+
+var currentPizza = [];
+var orders = [];
+var selectedStickerEmoji = null;
+var selectedClanEmoji = '🏰';
+
+// ====== HELPERS ======
+function getUsers() { return JSON.parse(localStorage.getItem('pgUsers') || '{}'); }
+function saveUsers(u) { localStorage.setItem('pgUsers', JSON.stringify(u)); }
+function getClans() { return JSON.parse(localStorage.getItem('pgClans') || '{}'); }
+function saveClans(c) { localStorage.setItem('pgClans', JSON.stringify(c)); }
+
+function saveData() {
+  if (!G.user) return;
+  var u = getUsers();
+  u[G.user] = G.data;
+  saveUsers(u);
+}
+
+function showError(msg) {
+  var el = document.getElementById('authError');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(function(){ el.classList.remove('show'); }, 3000);
+}
+function showSuccess(msg) {
+  var el = document.getElementById('authSuccess');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(function(){ el.classList.remove('show'); }, 3000);
+}
+
+function updateStats() {
+  document.getElementById('statScore').textContent = G.data.score;
+  document.getElementById('statStars').textContent = G.data.stars;
+  document.getElementById('statUser').textContent = G.user;
+}
+
+// ====== AUTH ======
+document.getElementById('tabLogin').onclick = function() {
+  document.getElementById('tabLogin').classList.add('active');
+  document.getElementById('tabRegister').classList.remove('active');
+  document.getElementById('loginForm').classList.add('active');
+  document.getElementById('registerForm').classList.remove('active');
+};
+
+document.getElementById('tabRegister').onclick = function() {
+  document.getElementById('tabRegister').classList.add('active');
+  document.getElementById('tabLogin').classList.remove('active');
+  document.getElementById('registerForm').classList.add('active');
+  document.getElementById('loginForm').classList.remove('active');
+};
+
+document.getElementById('loginBtn').onclick = function() {
+  var username = document.getElementById('loginUser').value.trim();
+  var password = document.getElementById('loginPass').value;
+  if (!username || !password) { showError('Заполни все поля!'); return; }
+  var users = getUsers();
+  if (!users[username]) { showError('Пользователь не найден!'); return; }
+  if (users[username].password !== password) { showError('Неверный пароль!'); return; }
+  G.user = username;
+  G.data = users[username];
+  localStorage.setItem('pgSession', username);
+  startGame();
+};
+
+document.getElementById('registerBtn').onclick = function() {
+  var username = document.getElementById('regUser').value.trim();
+  var pass = document.getElementById('regPass').value;
+  var pass2 = document.getElementById('regPass2').value;
+  if (username.length < 3) { showError('Имя минимум 3 символа!'); return; }
+  if (pass.length < 4) { showError('Пароль минимум 4 символа!'); return; }
+  if (pass !== pass2) { showError('Пароли не совпадают!'); return; }
+  var users = getUsers();
+  if (users[username]) { showError('Имя уже занято!'); return; }
+  users[username] = {
+    password: pass, score:0, stars:50,
+    inventory:{}, friends:[], friendRequests:[], clan:null,
+    sticker:'🍕', stickerLocked:false
+  };
+  saveUsers(users);
+  showSuccess('✅ Готово! Теперь войди.');
+  setTimeout(function(){
+    document.getElementById('tabLogin').click();
+    document.getElementById('loginUser').value = username;
+  }, 1500);
+};
+
+// Enter key in auth
+document.getElementById('loginPass').onkeypress = function(e){ if(e.key==='Enter') document.getElementById('loginBtn').click(); };
+document.getElementById('regPass2').onkeypress = function(e){ if(e.key==='Enter') document.getElementById('registerBtn').click(); };
+
+// ====== START GAME ======
+function startGame() {
+  // Always ensure all ingredients exist in inventory
+  if (!G.data.inventory) G.data.inventory = {};
+  INGREDIENTS.forEach(function(i) {
+    if (i.price === 0) {
+      G.data.inventory[i.name] = 999; // бесконечно
+    } else if (G.data.inventory[i.name] === undefined) {
+      G.data.inventory[i.name] = 0;
+    }
+  });
+  saveData();
+  document.getElementById('authScreen').classList.add('hidden');
+  document.getElementById('gameScreen').style.display = 'block';
+  updateStats();
+  renderIngredients();
+  renderShop();
+  renderInventory();
+  generateOrders();
+  renderOrders();
+  renderProfile();
+  renderFriends();
+  renderClan();
+}
+
+// Check session
+(function(){
+  var s = localStorage.getItem('pgSession');
+  if (s) {
+    var users = getUsers();
+    if (users[s]) { G.user = s; G.data = users[s]; startGame(); }
+  }
+})();
+
+// ====== TABS ======
+document.querySelectorAll('.tab').forEach(function(tab) {
+  tab.onclick = function() {
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+    tab.classList.add('active');
+    document.getElementById(tab.getAttribute('data-panel')).classList.add('active');
+    // Refresh on tab switch
+    var panel = tab.getAttribute('data-panel');
+    if (panel === 'friendsPanel') { renderFriends(); searchPlayers(); }
+    if (panel === 'clansPanel') renderClan();
+    if (panel === 'invPanel') renderInventory();
+    if (panel === 'shopPanel') renderShop();
+  };
+});
+
+// ====== LOGOUT ======
+document.getElementById('logoutBtn').onclick = function() {
+  localStorage.removeItem('pgSession');
+  G.user = null; G.data = null;
+  document.getElementById('gameScreen').style.display = 'none';
+  document.getElementById('authScreen').classList.remove('hidden');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+};
+
+// ====== PIZZA ======
+function renderIngredients() {
+  var grid = document.getElementById('ingGrid');
+  grid.innerHTML = '';
+  INGREDIENTS.forEach(function(ing) {
+    var cnt = G.data.inventory[ing.name] || 0;
+    var btn = document.createElement('button');
+    btn.className = 'ing-btn';
+    btn.disabled = cnt === 0;
+    // Special display for tomato paste and cheese
+    if (ing.name === 'Томатная паста') {
+      btn.innerHTML = '🍅<br><span style="font-size:0.5em;font-weight:700;">Паста</span><span class="cnt">∞</span>';
+    } else if (ing.name === 'Сыр') {
+      btn.innerHTML = '<span style="font-size:1.5em; display:block; width:40px; height:40px; background:radial-gradient(circle at 35% 35%,#fff176,#fdd835); border-radius:50%; margin:0 auto 4px;"></span><span style="font-size:0.45em;font-weight:700;">Сыр</span><span class="cnt">∞</span>';
+    } else {
+      btn.innerHTML = ing.icon + '<span class="cnt">x' + cnt + '</span>';
+    }
+    btn.title = ing.name;
+    btn.onclick = function() { addTopping(ing.name, ing.icon); };
+    grid.appendChild(btn);
+  });
+}
+
+function addTopping(name, icon) {
+  var ing = INGREDIENTS.find(function(i){ return i.name === name; });
+  if (!ing) return;
+  // Для бесплатных (бесконечных) не проверяем количество
+  if (ing.price > 0 && (G.data.inventory[name] || 0) <= 0) return;
+  
+  currentPizza.push(name);
+  // Уменьшаем только платные ингредиенты
+  if (ing.price > 0) G.data.inventory[name]--;
+  
+  var pizza = document.getElementById('pizzaCircle');
+
+  if (name === 'Томатная паста') {
+    // Красный соус — заливаем кругом
+    var sauce = document.createElement('div');
+    sauce.style.cssText = 'position:absolute;top:8%;left:8%;width:84%;height:84%;border-radius:50%;background:radial-gradient(circle,#e74c3c,#c0392b);opacity:0.85;pointer-events:none;z-index:1;';
+    pizza.appendChild(sauce);
+
+  } else if (name === 'Сыр') {
+    // Жёлтые кружочки рандомно по всей пицце
+    var count = 12 + Math.floor(Math.random() * 8);
+    for (var i = 0; i < count; i++) {
+      var circle = document.createElement('div');
+      var size = 8 + Math.random() * 18;
+      var angle = Math.random() * 2 * Math.PI;
+      var r = Math.random() * 40;
+      var cx = 50 + r * Math.cos(angle);
+      var cy = 50 + r * Math.sin(angle);
+      circle.style.cssText = 'position:absolute;border-radius:50%;pointer-events:none;z-index:2;'
+        + 'width:' + size + 'px;height:' + size + 'px;'
+        + 'left:calc(' + cx + '% - ' + (size/2) + 'px);'
+        + 'top:calc(' + cy + '% - ' + (size/2) + 'px);'
+        + 'background:radial-gradient(circle at 35% 35%,#fff176,#fdd835);'
+        + 'opacity:' + (0.75 + Math.random() * 0.25) + ';';
+      pizza.appendChild(circle);
+    }
+
+  } else {
+    // Много эмодзи рандомно по всей пицце
+    var count2 = 5 + Math.floor(Math.random() * 4);
+    for (var j = 0; j < count2; j++) {
+      var el = document.createElement('div');
+      el.className = 'topping';
+      el.textContent = icon;
+      var angle2 = Math.random() * 2 * Math.PI;
+      var r2 = Math.random() * 38;
+      el.style.left = (50 + r2 * Math.cos(angle2)) + '%';
+      el.style.top  = (50 + r2 * Math.sin(angle2)) + '%';
+      el.style.zIndex = '3';
+      el.style.fontSize = (1.2 + Math.random() * 0.8) + 'em';
+      el.style.transform = 'translate(-50%,-50%) rotate(' + (Math.random() * 360) + 'deg)';
+      pizza.appendChild(el);
+    }
+  }
+
+  renderIngredients();
+  saveData();
+}
+
+// ====== RESULT MESSAGE ======
+function showResultMsg(text, success) {
+  var existing = document.getElementById('resultMsg');
+  if (existing) existing.remove();
+  var div = document.createElement('div');
+  div.id = 'resultMsg';
+  div.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);'
+    + 'background:' + (success ? 'linear-gradient(135deg,#00b894,#00a383)' : 'linear-gradient(135deg,#d63031,#c0392b)') + ';'
+    + 'color:white;padding:30px 40px;border-radius:20px;font-size:1.3em;font-weight:700;'
+    + 'font-family:"Comic Sans MS",cursive;text-align:center;z-index:9999;'
+    + 'box-shadow:0 20px 60px rgba(0,0,0,0.4);max-width:85vw;'
+    + 'transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);';
+  div.textContent = text;
+  document.body.appendChild(div);
+  setTimeout(function(){ div.style.transform = 'translate(-50%,-50%) scale(1)'; }, 10);
+  setTimeout(function(){
+    div.style.transform = 'translate(-50%,-50%) scale(0)';
+    setTimeout(function(){ div.remove(); }, 300);
+  }, 2500);
+}
+
+// ====== OVEN ANIMATION ======
+function runOvenAnimation(callback) {
+  var overlay = document.getElementById('ovenOverlay');
+  var progress = document.getElementById('ovenProgress');
+  var status = document.getElementById('ovenStatus');
+  var temp = document.getElementById('ovenTemp');
+  var fire = document.getElementById('ovenFire');
+  var pizza = document.getElementById('ovenPizza');
+  var sparks = document.getElementById('ovenSparks');
+
+  var stages = [
+    { pct: 0,   msg: 'Загружаем пиццу...', t: '🌡️ 50°C',  delay: 600  },
+    { pct: 20,  msg: 'Разогрев духовки...', t: '🌡️ 100°C', delay: 700  },
+    { pct: 40,  msg: '🔥 Выпекаем!',        t: '🌡️ 180°C', delay: 800  },
+    { pct: 60,  msg: '🔥 Корочка золотится!', t:'🌡️ 220°C', delay: 900 },
+    { pct: 80,  msg: '🧀 Сыр плавится!',    t: '🌡️ 250°C', delay: 700  },
+    { pct: 95,  msg: '✨ Почти готово!',     t: '🌡️ 260°C', delay: 600  },
+    { pct: 100, msg: '🎉 Пицца готова!',     t: '🌡️ 260°C', delay: 800  },
+  ];
+
+  // Reset
+  progress.style.width = '0%';
+  fire.style.display = 'block';
+  pizza.style.transform = 'translate(-50%,-50%) scale(0.3)';
+  pizza.style.opacity = '0';
+  sparks.innerHTML = '';
+
+  overlay.classList.add('show');
+
+  // Pizza slides in
+  setTimeout(function() {
+    pizza.style.transform = 'translate(-50%,-50%) scale(1)';
+    pizza.style.opacity = '1';
+  }, 200);
+
+  var i = 0;
+  var total = 0;
+  function nextStage() {
+    if (i >= stages.length) {
+      // Sparks burst!
+      for (var s = 0; s < 18; s++) {
+        var sp = document.createElement('div');
+        sp.className = 'spark';
+        var angle = (s / 18) * 2 * Math.PI;
+        var dist = 40 + Math.random() * 40;
+        sp.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
+        sp.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
+        sp.style.left = (50 + Math.cos(angle) * 20) + '%';
+        sp.style.top  = (50 + Math.sin(angle) * 20) + '%';
+        sparks.appendChild(sp);
+        setTimeout(function(){ sp.remove(); }, 800);
+      }
+      // Pizza grows
+      pizza.style.transform = 'translate(-50%,-50%) scale(1.2)';
+      setTimeout(function() {
+        overlay.classList.remove('show');
+        fire.style.display = 'none';
+        pizza.style.transform = 'translate(-50%,-50%) scale(1)';
+        callback();
+      }, 900);
+      return;
+    }
+    var stage = stages[i];
+    total += stage.delay;
+    setTimeout(function(stg) {
+      progress.style.width = stg.pct + '%';
+      status.textContent = stg.msg;
+      temp.textContent = stg.t;
+      // Make pizza spin a bit when hot
+      if (stg.pct >= 60) {
+        pizza.style.transform = 'translate(-50%,-50%) scale(1.05) rotate(' + (Math.random()*10-5) + 'deg)';
+      }
+    }, total - stage.delay, stage);
+    i++;
+    setTimeout(nextStage, stage.delay);
+  }
+  nextStage();
+}
+
+document.getElementById('cookBtn').onclick = function() {
+  if (currentPizza.length === 0) { alert('Добавь ингредиенты!'); return; }
+
+  // Disable buttons during animation
+  document.getElementById('cookBtn').disabled = true;
+  document.getElementById('resetBtn').disabled = true;
+
+  runOvenAnimation(function() {
+    document.getElementById('cookBtn').disabled = false;
+    document.getElementById('resetBtn').disabled = false;
+
+    // Check active order
+    if (G.data.activeOrder !== undefined && G.data.activeOrder !== null) {
+      var ord = orders.find(function(o){ return o.id === G.data.activeOrder; });
+      if (ord) {
+        var sorted1 = currentPizza.slice().sort().join(',');
+        var sorted2 = ord.ings.slice().sort().join(',');
+        if (sorted1 === sorted2) {
+          G.data.score += ord.reward * 5;
+          G.data.stars += ord.reward;
+          showResultMsg('🎉 Заказ выполнен! +' + ord.reward + ' звёзд!', true);
+          orders = orders.filter(function(o){ return o.id !== G.data.activeOrder; });
+          G.data.activeOrder = null;
+          generateOrders();
+          renderOrders();
+        } else {
+          showResultMsg('❌ Не та пицца! Нужно: ' + ord.ings.join(', '), false);
+        }
+      }
+    } else {
+      var pts = currentPizza.length * 10;
+      var recipe = null;
+      for (var r in RECIPES) {
+        var s1 = currentPizza.slice().sort().join(',');
+        var s2 = RECIPES[r].slice().sort().join(',');
+        if (s1 === s2) { recipe = r; pts += 50; G.data.stars += 5; break; }
+      }
+      G.data.score += pts;
+      G.data.stars += Math.floor(pts / 10);
+      showResultMsg(recipe ? '🌟 ' + recipe + '! +' + pts + ' баллов!' : '🍕 Пицца готова! +' + pts + ' баллов!', true);
+    }
+    resetPizza();
+    updateStats();
+    saveData();
+  });
+};
+
+document.getElementById('resetBtn').onclick = function() {
+  resetPizza();
+};
+
+function resetPizza() {
+  currentPizza = [];
+  document.getElementById('pizzaCircle').innerHTML = '';
+  renderIngredients();
+}
+
+// ====== ORDERS ======
+function generateOrders() {
+  while (orders.length < 3) {
+    var t = ORDER_TYPES[Math.floor(Math.random() * ORDER_TYPES.length)];
+    var e = ELEPHANTS[Math.floor(Math.random() * ELEPHANTS.length)];
+    orders.push({ id: Date.now() + Math.random(), elephant: e, name: t.name, ings: t.ings, reward: t.reward });
+  }
+}
+
+function renderOrders() {
+  var el = document.getElementById('ordersList');
+  if (orders.length === 0) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">🐘</div><p>Нет заказов</p></div>';
+    return;
+  }
+  el.innerHTML = '';
+  orders.forEach(function(ord) {
+    var isActive = G.data.activeOrder === ord.id;
+    var card = document.createElement('div');
+    card.className = 'order-card' + (isActive ? ' active-order' : '');
+    card.innerHTML = '<div class="order-top"><div><b>🐘 ' + ord.elephant + '</b><br>' + ord.name + '</div><div class="order-reward">⭐ ' + ord.reward + '</div></div>'
+      + '<div class="order-recipe"><b>Нужно:</b> ' + ord.ings.join(', ') + '</div>'
+      + '<button class="btn ' + (isActive ? 'btn-red' : 'btn-blue') + '" style="width:100%">'
+      + (isActive ? '✅ Активный заказ' : 'Принять заказ') + '</button>';
+    card.querySelector('button').onclick = function() {
+      if (!isActive) { G.data.activeOrder = ord.id; saveData(); renderOrders(); }
+    };
+    el.appendChild(card);
+  });
+}
+
+// ====== SHOP ======
+function renderShop() {
+  var grid = document.getElementById('shopGrid');
+  grid.innerHTML = '';
+  INGREDIENTS.forEach(function(ing) {
+    if (ing.hidden) return; // Скрываем томатную пасту и сыр из магазина
+    var canBuy = G.data.stars >= ing.price;
+    var card = document.createElement('div');
+    card.className = 'item-card';
+    card.innerHTML = '<div class="item-icon">' + ing.icon + '</div>'
+      + '<div class="item-name">' + ing.name + '</div>'
+      + '<div class="item-price">' + (ing.price === 0 ? '∞ Бесплатно' : ing.price + ' ⭐') + '</div>';
+    var btn = document.createElement('button');
+    btn.className = 'btn ' + (canBuy ? 'btn-green' : 'btn-red');
+    btn.textContent = ing.price === 0 ? 'Бесплатно' : 'Купить';
+    btn.disabled = !canBuy && ing.price > 0;
+    btn.onclick = function() {
+      if (ing.price > 0 && G.data.stars < ing.price) { alert('Мало звёзд!'); return; }
+      G.data.stars -= ing.price;
+      G.data.inventory[ing.name] = (G.data.inventory[ing.name] || 0) + 1;
+      updateStats(); renderShop(); renderInventory(); renderIngredients(); saveData();
+    };
+    card.appendChild(btn);
+    grid.appendChild(card);
+  });
+}
+
+// ====== INVENTORY ======
+function renderInventory() {
+  var grid = document.getElementById('invGrid');
+  var items = INGREDIENTS.filter(function(i){ return !i.hidden && (G.data.inventory[i.name] || 0) > 0; });
+  if (items.length === 0) {
+    grid.innerHTML = '<div class="empty"><div class="empty-icon">📦</div><p>Инвентарь пуст<br>Купи что-нибудь в магазине!</p></div>';
+    return;
+  }
+  grid.innerHTML = '';
+  items.forEach(function(ing) {
+    var card = document.createElement('div');
+    card.className = 'item-card';
+    card.innerHTML = '<div class="item-icon">' + ing.icon + '</div>'
+      + '<div class="item-name">' + ing.name + '</div>'
+      + '<div class="item-price">x' + G.data.inventory[ing.name] + '</div>';
+    grid.appendChild(card);
+  });
+}
+
+// ====== PROFILE & STICKER ======
+function renderProfile() {
+  document.getElementById('avatarEl').textContent = G.data.sticker || '🍕';
+  document.getElementById('profileName').textContent = G.user;
+  if (G.data.stickerLocked) {
+    document.getElementById('stickerHint').textContent = '✅ Стикер выбран навсегда';
+    document.getElementById('stickerHint').style.color = '#00b894';
+  }
+}
+
+document.getElementById('avatarEl').onclick = function() {
+  if (G.data.stickerLocked) { alert('Стикер уже выбран и не может быть изменён!'); return; }
+  var sec = document.getElementById('stickerSection');
+  sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
+  if (sec.style.display === 'block') buildStickerGrid();
+};
+
+function buildStickerGrid() {
+  selectedStickerEmoji = null;
+  document.getElementById('stickerConfirm').style.display = 'none';
+  var grid = document.getElementById('stickerGridEl');
+  grid.innerHTML = '';
+  STICKERS.forEach(function(s) {
+    var div = document.createElement('div');
+    div.className = 'sticker-item';
+    div.textContent = s;
+    div.onclick = function() {
+      selectedStickerEmoji = s;
+      document.querySelectorAll('.sticker-item').forEach(function(x){ x.style.background=''; x.style.border='2px solid transparent'; });
+      div.style.background = '#ffeaa7';
+      div.style.border = '2px solid #d63031';
+      document.getElementById('stickerConfirmText').textContent = 'Выбрать стикер ' + s + '? Это нельзя будет изменить!';
+      document.getElementById('stickerConfirm').style.display = 'block';
+    };
+    grid.appendChild(div);
+  });
+}
+
+document.getElementById('stickerYes').onclick = function() {
+  if (!selectedStickerEmoji) return;
+  G.data.sticker = selectedStickerEmoji;
+  G.data.stickerLocked = true;
+  document.getElementById('avatarEl').textContent = selectedStickerEmoji;
+  document.getElementById('stickerSection').style.display = 'none';
+  document.getElementById('stickerConfirm').style.display = 'none';
+  document.getElementById('stickerHint').textContent = '✅ Стикер выбран навсегда';
+  document.getElementById('stickerHint').style.color = '#00b894';
+  saveData();
+};
+
+document.getElementById('stickerNo').onclick = function() {
+  document.getElementById('stickerConfirm').style.display = 'none';
+  selectedStickerEmoji = null;
+};
+
+// ====== FRIENDS ======
+document.getElementById('searchBtn').onclick = function() { searchPlayers(); };
+document.getElementById('searchInput').onkeypress = function(e){ if(e.key==='Enter') searchPlayers(); };
+
+function searchPlayers() {
+  var query = document.getElementById('searchInput').value.trim().toLowerCase();
+  var users = getUsers();
+  var res = document.getElementById('searchResults');
+  var matches = Object.keys(users).filter(function(u){
+    return u !== G.user && (query === '' || u.toLowerCase().includes(query));
+  });
+  if (matches.length === 0) {
+    res.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><p>Игроки не найдены<br>Зарегистрируй друга и ищи его здесь!</p></div>';
+    return;
+  }
+  res.innerHTML = '<h4 style="margin-bottom:10px;">Найдено игроков: ' + matches.length + '</h4>';
+  matches.forEach(function(username) {
+    var isFriend = G.data.friends.includes(username);
+    var sentReq = users[username].friendRequests && users[username].friendRequests.includes(G.user);
+    var card = document.createElement('div');
+    card.className = 'friend-card';
+    var sticker = users[username].sticker || '🍕';
+    card.innerHTML = '<div class="friend-left"><div class="friend-avatar">' + sticker + '</div><div><div class="friend-name">' + username + '</div><div class="friend-stars">⭐ ' + (users[username].stars||0) + '</div></div></div>';
+    var right = document.createElement('div');
+    if (isFriend) {
+      right.innerHTML = '<span style="color:#00b894;font-weight:700;">✅ Друзья</span>';
+    } else if (sentReq) {
+      right.innerHTML = '<span style="color:#b2bec3;">⏳ Запрос отправлен</span>';
+    } else {
+      var btn = document.createElement('button');
+      btn.className = 'btn btn-green';
+      btn.textContent = '➕ Добавить';
+      btn.onclick = function() {
+        var u2 = getUsers();
+        if (!u2[username].friendRequests) u2[username].friendRequests = [];
+        if (!u2[username].friendRequests.includes(G.user)) {
+          u2[username].friendRequests.push(G.user);
+          saveUsers(u2);
+          alert('✅ Запрос отправлен ' + username + '!');
+          searchPlayers();
+        }
+      };
+      right.appendChild(btn);
+    }
+    card.appendChild(right);
+    res.appendChild(card);
+  });
+}
+
+function renderFriends() {
+  var el = document.getElementById('friendsList');
+  document.getElementById('friendsCount').textContent = G.data.friends.length;
+  var users = getUsers();
+  el.innerHTML = '';
+
+  // Incoming requests
+  if (G.data.friendRequests && G.data.friendRequests.length > 0) {
+    var reqTitle = document.createElement('h4');
+    reqTitle.style.marginBottom = '8px';
+    reqTitle.textContent = '📬 Входящие запросы:';
+    el.appendChild(reqTitle);
+
+    G.data.friendRequests.forEach(function(from) {
+      var sticker = users[from] ? (users[from].sticker||'🍕') : '🍕';
+      var card = document.createElement('div');
+      card.className = 'friend-card request';
+      card.innerHTML = '<div class="friend-left"><div class="friend-avatar">' + sticker + '</div><div class="friend-name">' + from + '</div></div>';
+      var btns = document.createElement('div');
+      btns.style.cssText = 'display:flex;gap:6px;';
+      var yes = document.createElement('button');
+      yes.className = 'btn btn-green'; yes.textContent = '✅ Принять';
+      yes.onclick = function() {
+        var u2 = getUsers();
+        if (!u2[G.user].friends) u2[G.user].friends = [];
+        if (!u2[from].friends) u2[from].friends = [];
+        u2[G.user].friends.push(from);
+        u2[from].friends.push(G.user);
+        u2[G.user].friendRequests = u2[G.user].friendRequests.filter(function(x){ return x !== from; });
+        saveUsers(u2);
+        G.data = u2[G.user];
+        renderFriends();
+        searchPlayers();
+      };
+      var no = document.createElement('button');
+      no.className = 'btn btn-red'; no.textContent = '❌';
+      no.onclick = function() {
+        var u2 = getUsers();
+        u2[G.user].friendRequests = u2[G.user].friendRequests.filter(function(x){ return x !== from; });
+        saveUsers(u2);
+        G.data = u2[G.user];
+        renderFriends();
+      };
+      btns.appendChild(yes); btns.appendChild(no);
+      card.appendChild(btns);
+      el.appendChild(card);
+    });
+
+    var hr = document.createElement('hr');
+    hr.style.margin = '12px 0';
+    el.appendChild(hr);
+  }
+
+  if (G.data.friends.length === 0) {
+    var empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.innerHTML = '<div class="empty-icon">👥</div><p>Нет друзей пока<br>Все игроки показаны выше!</p>';
+    el.appendChild(empty);
+  } else {
+    G.data.friends.forEach(function(fname) {
+      var fu = users[fname];
+      var sticker = fu ? (fu.sticker||'🍕') : '🍕';
+      var card = document.createElement('div');
+      card.className = 'friend-card';
+      card.innerHTML = '<div class="friend-left"><div class="friend-avatar">' + sticker + '</div><div><div class="friend-name">' + fname + '</div><div class="friend-stars">⭐ ' + (fu ? fu.stars : 0) + '</div></div></div>';
+      var btn = document.createElement('button');
+      btn.className = 'btn btn-red'; btn.textContent = '🗑️';
+      btn.onclick = function() {
+        var u2 = getUsers();
+        u2[G.user].friends = u2[G.user].friends.filter(function(x){ return x !== fname; });
+        if (u2[fname]) u2[fname].friends = u2[fname].friends.filter(function(x){ return x !== G.user; });
+        saveUsers(u2);
+        G.data = u2[G.user];
+        renderFriends();
+        searchPlayers();
+      };
+      card.appendChild(btn);
+      el.appendChild(card);
+    });
+  }
+}
+
+// ====== CLANS ======
+function renderClan() {
+  var el = document.getElementById('clanContent');
+  var clans = getClans();
+
+  if (!G.data.clan) {
+    el.innerHTML = '';
+    var empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.innerHTML = '<div class="empty-icon">🏰</div><p>У тебя нет клана</p>';
+    el.appendChild(empty);
+
+    var form = document.createElement('div');
+    form.className = 'create-clan-form';
+    form.innerHTML = '<h3 style="margin-bottom:12px;">➕ Создать клан</h3>'
+      + '<input type="text" id="clanNameInput" placeholder="Название клана (мин. 3 символа)">'
+      + '<p style="margin-bottom:8px; font-weight:700;">Выбери эмодзи:</p>';
+    var pick = document.createElement('div');
+    pick.className = 'emoji-pick';
+    CLAN_EMOJIS.forEach(function(e) {
+      var d = document.createElement('div');
+      d.textContent = e;
+      if (e === selectedClanEmoji) d.classList.add('picked');
+      d.onclick = function() {
+        selectedClanEmoji = e;
+        document.querySelectorAll('.emoji-pick div').forEach(function(x){ x.classList.remove('picked'); });
+        d.classList.add('picked');
+      };
+      pick.appendChild(d);
+    });
+    form.appendChild(pick);
+    var btn = document.createElement('button');
+    btn.className = 'btn btn-green'; btn.textContent = '✅ Создать клан';
+    btn.style.marginTop = '12px'; btn.style.width = '100%';
+    btn.onclick = function() {
+      var name = document.getElementById('clanNameInput').value.trim();
+      if (name.length < 3) { alert('Название минимум 3 символа!'); return; }
+      var clans2 = getClans();
+      var id = 'clan_' + Date.now();
+      clans2[id] = { name:name, emoji:selectedClanEmoji, leader:G.user, members:[G.user] };
+      saveClans(clans2);
+      G.data.clan = id;
+      saveData();
+      renderClan();
+      alert('✅ Клан "' + name + '" создан!');
+    };
+    form.appendChild(btn);
+    el.appendChild(form);
+    return;
+  }
+
+  var clan = clans[G.data.clan];
+  if (!clan) { G.data.clan = null; saveData(); renderClan(); return; }
+  var isLeader = clan.leader === G.user;
+
+  el.innerHTML = '';
+  var box = document.createElement('div');
+  box.className = 'clan-box';
+  box.innerHTML = '<div class="clan-box-header"><span class="clan-big-emoji">' + clan.emoji + '</span><div class="clan-big-name">' + clan.name + '</div><p>' + clan.members.length + ' участников</p></div>'
+    + '<h4 style="margin-bottom:10px;">👥 Участники:</h4>';
+  clan.members.forEach(function(m) {
+    var users = getUsers();
+    var msticker = users[m] ? (users[m].sticker||'🍕') : '🍕';
+    var row = document.createElement('div');
+    row.className = 'clan-member';
+    row.innerHTML = '<span>' + msticker + ' ' + m + (m === clan.leader ? ' 👑' : '') + '</span>';
+    if (isLeader && m !== G.user) {
+      var rb = document.createElement('button');
+      rb.className = 'btn btn-red'; rb.textContent = 'Удалить'; rb.style.padding = '5px 10px';
+      rb.onclick = function() {
+        if (!confirm('Удалить ' + m + ' из клана?')) return;
+        var c2 = getClans(); var u2 = getUsers();
+        c2[G.data.clan].members = c2[G.data.clan].members.filter(function(x){ return x !== m; });
+        if (u2[m]) u2[m].clan = null;
+        saveClans(c2); saveUsers(u2);
+        renderClan();
+      };
+      row.appendChild(rb);
+    }
+    box.appendChild(row);
+  });
+  el.appendChild(box);
+
+  // Leave / Disband
+  var leaveBtn = document.createElement('button');
+  leaveBtn.className = 'btn btn-red'; leaveBtn.style.width = '100%'; leaveBtn.style.marginTop = '12px';
+  leaveBtn.textContent = isLeader ? '🗑️ Распустить клан' : '🚪 Покинуть клан';
+  leaveBtn.onclick = function() {
+    if (!confirm(isLeader ? 'Распустить клан?' : 'Покинуть клан?')) return;
+    var c2 = getClans(); var u2 = getUsers();
+    if (isLeader) {
+      c2[G.data.clan].members.forEach(function(m){ if(u2[m]) u2[m].clan = null; });
+      delete c2[G.data.clan];
+    } else {
+      c2[G.data.clan].members = c2[G.data.clan].members.filter(function(x){ return x !== G.user; });
+      u2[G.user].clan = null;
+    }
+    saveClans(c2); saveUsers(u2);
+    G.data.clan = null; saveData();
+    renderClan();
+  };
+  el.appendChild(leaveBtn);
+}
+
+})();
+</script>
+
+
+</div>
+
+<script>
+function openGame() {
+  document.getElementById('siteContent').style.display = 'none';
+  document.getElementById('mainNav').style.display = 'none';
+  document.getElementById('gameSection').style.display = 'block';
+  document.getElementById('bodyEl').classList.add('game-mode');
+  window.scrollTo(0,0);
+}
+function closeGame() {
+  document.getElementById('siteContent').style.display = 'block';
+  document.getElementById('mainNav').style.display = 'flex';
+  document.getElementById('gameSection').style.display = 'none';
+  document.getElementById('bodyEl').classList.remove('game-mode');
+  window.scrollTo(0,0);
+}
+
+// Scroll reveal
+var obs = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('vis'); obs.unobserve(e.target); }});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+</script>
+<script>
+
+(function() {
+'use strict';
+
+// ====== DATA ======
+var G = {
+  user: null,
+  data: null
+};
+
+var INGREDIENTS = [
+  {name:'Томатная паста', icon:'🍅', price:0,  hidden:true},
+  {name:'Сыр',            icon:'🧀', price:0,  hidden:true},
+  {name:'Грибы',          icon:'🍄', price:8},
+  {name:'Пепперони',      icon:'🥓', price:10},
+  {name:'Ветчина',        icon:'🍖', price:12},
+  {name:'Ананас',         icon:'🍍', price:7},
+  {name:'Лук',            icon:'🧅', price:4},
+  {name:'Оливки',         icon:'🫒', price:6},
+  {name:'Моцарелла',      icon:'🧈', price:9},
+  {name:'Перец',          icon:'🫑', price:6},
+  {name:'Кукуруза',       icon:'🌽', price:5},
+  {name:'Креветки',       icon:'🦐', price:15},
+  {name:'Яйцо',           icon:'🍳', price:8},
+  {name:'Говядина',       icon:'🥩', price:14},
+  {name:'Чили',           icon:'🌶️', price:7},
+  {name:'Бекон',          icon:'🥚', price:11},
+  {name:'Шпинат',         icon:'🌿', price:5},
+  {name:'Краб',           icon:'🦀', price:18},
+  {name:'Томаты черри',   icon:'🫐', price:6},
+  {name:'Тунец',          icon:'🐟', price:13},
+  {name:'Артишок',        icon:'🥦', price:9},
+];
+
+var RECIPES = {
+  'Маргарита':     ['Томатная паста','Сыр'],
+  'Пепперони':     ['Томатная паста','Сыр','Пепперони'],
+  'Гавайская':     ['Томатная паста','Сыр','Ананас','Ветчина'],
+  'Вегетарианская':['Томатная паста','Сыр','Грибы','Лук','Оливки'],
+  'Мясная':        ['Томатная паста','Сыр','Пепперони','Ветчина','Говядина'],
+  'Морская':       ['Томатная паста','Сыр','Креветки','Оливки'],
+  'Острая':        ['Томатная паста','Сыр','Пепперони','Чили','Перец'],
+  'Деревенская':   ['Томатная паста','Сыр','Кукуруза','Перец','Яйцо'],
+  'Краббовая':     ['Томатная паста','Сыр','Краб','Томаты черри'],
+  'Тунец':         ['Томатная паста','Сыр','Тунец','Лук','Оливки'],
+  'Зелёная':       ['Томатная паста','Сыр','Шпинат','Артишок','Перец'],
+};
+
+var ELEPHANTS = ['Джамбо','Дамбо','Элли','Хортон','Бабар','Слоник'];
+var ORDER_TYPES = [
+  {name:'Маргарита',     ings:['Томатная паста','Сыр'],                                    reward:15},
+  {name:'Пепперони',     ings:['Томатная паста','Сыр','Пепперони'],                        reward:25},
+  {name:'Гавайская',     ings:['Томатная паста','Сыр','Ананас','Ветчина'],                 reward:35},
+  {name:'Вегетарианская',ings:['Томатная паста','Сыр','Грибы','Лук'],                      reward:30},
+  {name:'Мясная',        ings:['Томатная паста','Сыр','Пепперони','Ветчина','Говядина'],   reward:45},
+  {name:'Морская',       ings:['Томатная паста','Сыр','Креветки','Оливки'],                reward:50},
+  {name:'Острая',        ings:['Томатная паста','Сыр','Пепперони','Чили','Перец'],         reward:40},
+  {name:'Деревенская',   ings:['Томатная паста','Сыр','Кукуруза','Перец','Яйцо'],         reward:35},
+  {name:'Краббовая',     ings:['Томатная паста','Сыр','Краб','Томаты черри'],              reward:55},
+  {name:'Тунец',         ings:['Томатная паста','Сыр','Тунец','Лук','Оливки'],            reward:45},
+  {name:'Зелёная',       ings:['Томатная паста','Сыр','Шпинат','Артишок','Перец'],        reward:40},
+];
+
+var CLAN_EMOJIS = ['🏰','⚔️','🛡️','👑','🔥','⚡','💎','🌟','⭐','🦁','🐉','🦅','🐺','🐯','🦈','🐲','💀','👹'];
+var STICKERS = [
+  '🍕','🐘','👨‍🍳','👸','🤴','🦸','🧙','🧛','🐶','🐱','🐭','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷',
+  '🐸','🐵','🦊','🐔','🐧','🦆','⭐','🌟','💫','✨','🔥','💧','⚡','🌈','☀️','🌙','🍔','🌭','🍗','🍖',
+  '🌮','🎮','🎯','🎲','🎨','🎭','🏆','🥇','💎','💰','👑','🎤','🎸','🎺','🦈','🐲','🚀','💣','🌊','🎪'
+];
+
+var currentPizza = [];
+var orders = [];
+var selectedStickerEmoji = null;
+var selectedClanEmoji = '🏰';
+
+// ====== HELPERS ======
+function getUsers() { return JSON.parse(localStorage.getItem('pgUsers') || '{}'); }
+function saveUsers(u) { localStorage.setItem('pgUsers', JSON.stringify(u)); }
+function getClans() { return JSON.parse(localStorage.getItem('pgClans') || '{}'); }
+function saveClans(c) { localStorage.setItem('pgClans', JSON.stringify(c)); }
+
+function saveData() {
+  if (!G.user) return;
+  var u = getUsers();
+  u[G.user] = G.data;
+  saveUsers(u);
+}
+
+function showError(msg) {
+  var el = document.getElementById('authError');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(function(){ el.classList.remove('show'); }, 3000);
+}
+function showSuccess(msg) {
+  var el = document.getElementById('authSuccess');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(function(){ el.classList.remove('show'); }, 3000);
+}
+
+function updateStats() {
+  document.getElementById('statScore').textContent = G.data.score;
+  document.getElementById('statStars').textContent = G.data.stars;
+  document.getElementById('statUser').textContent = G.user;
+}
+
+// ====== AUTH ======
+document.getElementById('tabLogin').onclick = function() {
+  document.getElementById('tabLogin').classList.add('active');
+  document.getElementById('tabRegister').classList.remove('active');
+  document.getElementById('loginForm').classList.add('active');
+  document.getElementById('registerForm').classList.remove('active');
+};
+
+document.getElementById('tabRegister').onclick = function() {
+  document.getElementById('tabRegister').classList.add('active');
+  document.getElementById('tabLogin').classList.remove('active');
+  document.getElementById('registerForm').classList.add('active');
+  document.getElementById('loginForm').classList.remove('active');
+};
+
+document.getElementById('loginBtn').onclick = function() {
+  var username = document.getElementById('loginUser').value.trim();
+  var password = document.getElementById('loginPass').value;
+  if (!username || !password) { showError('Заполни все поля!'); return; }
+  var users = getUsers();
+  if (!users[username]) { showError('Пользователь не найден!'); return; }
+  if (users[username].password !== password) { showError('Неверный пароль!'); return; }
+  G.user = username;
+  G.data = users[username];
+  localStorage.setItem('pgSession', username);
+  startGame();
+};
+
+document.getElementById('registerBtn').onclick = function() {
+  var username = document.getElementById('regUser').value.trim();
+  var pass = document.getElementById('regPass').value;
+  var pass2 = document.getElementById('regPass2').value;
+  if (username.length < 3) { showError('Имя минимум 3 символа!'); return; }
+  if (pass.length < 4) { showError('Пароль минимум 4 символа!'); return; }
+  if (pass !== pass2) { showError('Пароли не совпадают!'); return; }
+  var users = getUsers();
+  if (users[username]) { showError('Имя уже занято!'); return; }
+  users[username] = {
+    password: pass, score:0, stars:50,
+    inventory:{}, friends:[], friendRequests:[], clan:null,
+    sticker:'🍕', stickerLocked:false
+  };
+  saveUsers(users);
+  showSuccess('✅ Готово! Теперь войди.');
+  setTimeout(function(){
+    document.getElementById('tabLogin').click();
+    document.getElementById('loginUser').value = username;
+  }, 1500);
+};
+
+// Enter key in auth
+document.getElementById('loginPass').onkeypress = function(e){ if(e.key==='Enter') document.getElementById('loginBtn').click(); };
+document.getElementById('regPass2').onkeypress = function(e){ if(e.key==='Enter') document.getElementById('registerBtn').click(); };
+
+// ====== START GAME ======
+function startGame() {
+  // Always ensure all ingredients exist in inventory
+  if (!G.data.inventory) G.data.inventory = {};
+  INGREDIENTS.forEach(function(i) {
+    if (i.price === 0) {
+      G.data.inventory[i.name] = 999; // бесконечно
+    } else if (G.data.inventory[i.name] === undefined) {
+      G.data.inventory[i.name] = 0;
+    }
+  });
+  saveData();
+  document.getElementById('authScreen').classList.add('hidden');
+  document.getElementById('gameScreen').style.display = 'block';
+  updateStats();
+  renderIngredients();
+  renderShop();
+  renderInventory();
+  generateOrders();
+  renderOrders();
+  renderProfile();
+  renderFriends();
+  renderClan();
+}
+
+// Check session
+(function(){
+  var s = localStorage.getItem('pgSession');
+  if (s) {
+    var users = getUsers();
+    if (users[s]) { G.user = s; G.data = users[s]; startGame(); }
+  }
+})();
+
+// ====== TABS ======
+document.querySelectorAll('.tab').forEach(function(tab) {
+  tab.onclick = function() {
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+    tab.classList.add('active');
+    document.getElementById(tab.getAttribute('data-panel')).classList.add('active');
+    // Refresh on tab switch
+    var panel = tab.getAttribute('data-panel');
+    if (panel === 'friendsPanel') { renderFriends(); searchPlayers(); }
+    if (panel === 'clansPanel') renderClan();
+    if (panel === 'invPanel') renderInventory();
+    if (panel === 'shopPanel') renderShop();
+  };
+});
+
+// ====== LOGOUT ======
+document.getElementById('logoutBtn').onclick = function() {
+  localStorage.removeItem('pgSession');
+  G.user = null; G.data = null;
+  document.getElementById('gameScreen').style.display = 'none';
+  document.getElementById('authScreen').classList.remove('hidden');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+};
+
+// ====== PIZZA ======
+function renderIngredients() {
+  var grid = document.getElementById('ingGrid');
+  grid.innerHTML = '';
+  INGREDIENTS.forEach(function(ing) {
+    var cnt = G.data.inventory[ing.name] || 0;
+    var btn = document.createElement('button');
+    btn.className = 'ing-btn';
+    btn.disabled = cnt === 0;
+    // Special display for tomato paste and cheese
+    if (ing.name === 'Томатная паста') {
+      btn.innerHTML = '🍅<br><span style="font-size:0.5em;font-weight:700;">Паста</span><span class="cnt">∞</span>';
+    } else if (ing.name === 'Сыр') {
+      btn.innerHTML = '<span style="font-size:1.5em; display:block; width:40px; height:40px; background:radial-gradient(circle at 35% 35%,#fff176,#fdd835); border-radius:50%; margin:0 auto 4px;"></span><span style="font-size:0.45em;font-weight:700;">Сыр</span><span class="cnt">∞</span>';
+    } else {
+      btn.innerHTML = ing.icon + '<span class="cnt">x' + cnt + '</span>';
+    }
+    btn.title = ing.name;
+    btn.onclick = function() { addTopping(ing.name, ing.icon); };
+    grid.appendChild(btn);
+  });
+}
+
+function addTopping(name, icon) {
+  var ing = INGREDIENTS.find(function(i){ return i.name === name; });
+  if (!ing) return;
+  // Для бесплатных (бесконечных) не проверяем количество
+  if (ing.price > 0 && (G.data.inventory[name] || 0) <= 0) return;
+  
+  currentPizza.push(name);
+  // Уменьшаем только платные ингредиенты
+  if (ing.price > 0) G.data.inventory[name]--;
+  
+  var pizza = document.getElementById('pizzaCircle');
+
+  if (name === 'Томатная паста') {
+    // Красный соус — заливаем кругом
+    var sauce = document.createElement('div');
+    sauce.style.cssText = 'position:absolute;top:8%;left:8%;width:84%;height:84%;border-radius:50%;background:radial-gradient(circle,#e74c3c,#c0392b);opacity:0.85;pointer-events:none;z-index:1;';
+    pizza.appendChild(sauce);
+
+  } else if (name === 'Сыр') {
+    // Жёлтые кружочки рандомно по всей пицце
+    var count = 12 + Math.floor(Math.random() * 8);
+    for (var i = 0; i < count; i++) {
+      var circle = document.createElement('div');
+      var size = 8 + Math.random() * 18;
+      var angle = Math.random() * 2 * Math.PI;
+      var r = Math.random() * 40;
+      var cx = 50 + r * Math.cos(angle);
+      var cy = 50 + r * Math.sin(angle);
+      circle.style.cssText = 'position:absolute;border-radius:50%;pointer-events:none;z-index:2;'
+        + 'width:' + size + 'px;height:' + size + 'px;'
+        + 'left:calc(' + cx + '% - ' + (size/2) + 'px);'
+        + 'top:calc(' + cy + '% - ' + (size/2) + 'px);'
+        + 'background:radial-gradient(circle at 35% 35%,#fff176,#fdd835);'
+        + 'opacity:' + (0.75 + Math.random() * 0.25) + ';';
+      pizza.appendChild(circle);
+    }
+
+  } else {
+    // Много эмодзи рандомно по всей пицце
+    var count2 = 5 + Math.floor(Math.random() * 4);
+    for (var j = 0; j < count2; j++) {
+      var el = document.createElement('div');
+      el.className = 'topping';
+      el.textContent = icon;
+      var angle2 = Math.random() * 2 * Math.PI;
+      var r2 = Math.random() * 38;
+      el.style.left = (50 + r2 * Math.cos(angle2)) + '%';
+      el.style.top  = (50 + r2 * Math.sin(angle2)) + '%';
+      el.style.zIndex = '3';
+      el.style.fontSize = (1.2 + Math.random() * 0.8) + 'em';
+      el.style.transform = 'translate(-50%,-50%) rotate(' + (Math.random() * 360) + 'deg)';
+      pizza.appendChild(el);
+    }
+  }
+
+  renderIngredients();
+  saveData();
+}
+
+// ====== RESULT MESSAGE ======
+function showResultMsg(text, success) {
+  var existing = document.getElementById('resultMsg');
+  if (existing) existing.remove();
+  var div = document.createElement('div');
+  div.id = 'resultMsg';
+  div.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);'
+    + 'background:' + (success ? 'linear-gradient(135deg,#00b894,#00a383)' : 'linear-gradient(135deg,#d63031,#c0392b)') + ';'
+    + 'color:white;padding:30px 40px;border-radius:20px;font-size:1.3em;font-weight:700;'
+    + 'font-family:"Comic Sans MS",cursive;text-align:center;z-index:9999;'
+    + 'box-shadow:0 20px 60px rgba(0,0,0,0.4);max-width:85vw;'
+    + 'transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);';
+  div.textContent = text;
+  document.body.appendChild(div);
+  setTimeout(function(){ div.style.transform = 'translate(-50%,-50%) scale(1)'; }, 10);
+  setTimeout(function(){
+    div.style.transform = 'translate(-50%,-50%) scale(0)';
+    setTimeout(function(){ div.remove(); }, 300);
+  }, 2500);
+}
+
+// ====== OVEN ANIMATION ======
+function runOvenAnimation(callback) {
+  var overlay = document.getElementById('ovenOverlay');
+  var progress = document.getElementById('ovenProgress');
+  var status = document.getElementById('ovenStatus');
+  var temp = document.getElementById('ovenTemp');
+  var fire = document.getElementById('ovenFire');
+  var pizza = document.getElementById('ovenPizza');
+  var sparks = document.getElementById('ovenSparks');
+
+  var stages = [
+    { pct: 0,   msg: 'Загружаем пиццу...', t: '🌡️ 50°C',  delay: 600  },
+    { pct: 20,  msg: 'Разогрев духовки...', t: '🌡️ 100°C', delay: 700  },
+    { pct: 40,  msg: '🔥 Выпекаем!',        t: '🌡️ 180°C', delay: 800  },
+    { pct: 60,  msg: '🔥 Корочка золотится!', t:'🌡️ 220°C', delay: 900 },
+    { pct: 80,  msg: '🧀 Сыр плавится!',    t: '🌡️ 250°C', delay: 700  },
+    { pct: 95,  msg: '✨ Почти готово!',     t: '🌡️ 260°C', delay: 600  },
+    { pct: 100, msg: '🎉 Пицца готова!',     t: '🌡️ 260°C', delay: 800  },
+  ];
+
+  // Reset
+  progress.style.width = '0%';
+  fire.style.display = 'block';
+  pizza.style.transform = 'translate(-50%,-50%) scale(0.3)';
+  pizza.style.opacity = '0';
+  sparks.innerHTML = '';
+
+  overlay.classList.add('show');
+
+  // Pizza slides in
+  setTimeout(function() {
+    pizza.style.transform = 'translate(-50%,-50%) scale(1)';
+    pizza.style.opacity = '1';
+  }, 200);
+
+  var i = 0;
+  var total = 0;
+  function nextStage() {
+    if (i >= stages.length) {
+      // Sparks burst!
+      for (var s = 0; s < 18; s++) {
+        var sp = document.createElement('div');
+        sp.className = 'spark';
+        var angle = (s / 18) * 2 * Math.PI;
+        var dist = 40 + Math.random() * 40;
+        sp.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
+        sp.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
+        sp.style.left = (50 + Math.cos(angle) * 20) + '%';
+        sp.style.top  = (50 + Math.sin(angle) * 20) + '%';
+        sparks.appendChild(sp);
+        setTimeout(function(){ sp.remove(); }, 800);
+      }
+      // Pizza grows
+      pizza.style.transform = 'translate(-50%,-50%) scale(1.2)';
+      setTimeout(function() {
+        overlay.classList.remove('show');
+        fire.style.display = 'none';
+        pizza.style.transform = 'translate(-50%,-50%) scale(1)';
+        callback();
+      }, 900);
+      return;
+    }
+    var stage = stages[i];
+    total += stage.delay;
+    setTimeout(function(stg) {
+      progress.style.width = stg.pct + '%';
+      status.textContent = stg.msg;
+      temp.textContent = stg.t;
+      // Make pizza spin a bit when hot
+      if (stg.pct >= 60) {
+        pizza.style.transform = 'translate(-50%,-50%) scale(1.05) rotate(' + (Math.random()*10-5) + 'deg)';
+      }
+    }, total - stage.delay, stage);
+    i++;
+    setTimeout(nextStage, stage.delay);
+  }
+  nextStage();
+}
+
+document.getElementById('cookBtn').onclick = function() {
+  if (currentPizza.length === 0) { alert('Добавь ингредиенты!'); return; }
+
+  // Disable buttons during animation
+  document.getElementById('cookBtn').disabled = true;
+  document.getElementById('resetBtn').disabled = true;
+
+  runOvenAnimation(function() {
+    document.getElementById('cookBtn').disabled = false;
+    document.getElementById('resetBtn').disabled = false;
+
+    // Check active order
+    if (G.data.activeOrder !== undefined && G.data.activeOrder !== null) {
+      var ord = orders.find(function(o){ return o.id === G.data.activeOrder; });
+      if (ord) {
+        var sorted1 = currentPizza.slice().sort().join(',');
+        var sorted2 = ord.ings.slice().sort().join(',');
+        if (sorted1 === sorted2) {
+          G.data.score += ord.reward * 5;
+          G.data.stars += ord.reward;
+          showResultMsg('🎉 Заказ выполнен! +' + ord.reward + ' звёзд!', true);
+          orders = orders.filter(function(o){ return o.id !== G.data.activeOrder; });
+          G.data.activeOrder = null;
+          generateOrders();
+          renderOrders();
+        } else {
+          showResultMsg('❌ Не та пицца! Нужно: ' + ord.ings.join(', '), false);
+        }
+      }
+    } else {
+      var pts = currentPizza.length * 10;
+      var recipe = null;
+      for (var r in RECIPES) {
+        var s1 = currentPizza.slice().sort().join(',');
+        var s2 = RECIPES[r].slice().sort().join(',');
+        if (s1 === s2) { recipe = r; pts += 50; G.data.stars += 5; break; }
+      }
+      G.data.score += pts;
+      G.data.stars += Math.floor(pts / 10);
+      showResultMsg(recipe ? '🌟 ' + recipe + '! +' + pts + ' баллов!' : '🍕 Пицца готова! +' + pts + ' баллов!', true);
+    }
+    resetPizza();
+    updateStats();
+    saveData();
+  });
+};
+
+document.getElementById('resetBtn').onclick = function() {
+  resetPizza();
+};
+
+function resetPizza() {
+  currentPizza = [];
+  document.getElementById('pizzaCircle').innerHTML = '';
+  renderIngredients();
+}
+
+// ====== ORDERS ======
+function generateOrders() {
+  while (orders.length < 3) {
+    var t = ORDER_TYPES[Math.floor(Math.random() * ORDER_TYPES.length)];
+    var e = ELEPHANTS[Math.floor(Math.random() * ELEPHANTS.length)];
+    orders.push({ id: Date.now() + Math.random(), elephant: e, name: t.name, ings: t.ings, reward: t.reward });
+  }
+}
+
+function renderOrders() {
+  var el = document.getElementById('ordersList');
+  if (orders.length === 0) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">🐘</div><p>Нет заказов</p></div>';
+    return;
+  }
+  el.innerHTML = '';
+  orders.forEach(function(ord) {
+    var isActive = G.data.activeOrder === ord.id;
+    var card = document.createElement('div');
+    card.className = 'order-card' + (isActive ? ' active-order' : '');
+    card.innerHTML = '<div class="order-top"><div><b>🐘 ' + ord.elephant + '</b><br>' + ord.name + '</div><div class="order-reward">⭐ ' + ord.reward + '</div></div>'
+      + '<div class="order-recipe"><b>Нужно:</b> ' + ord.ings.join(', ') + '</div>'
+      + '<button class="btn ' + (isActive ? 'btn-red' : 'btn-blue') + '" style="width:100%">'
+      + (isActive ? '✅ Активный заказ' : 'Принять заказ') + '</button>';
+    card.querySelector('button').onclick = function() {
+      if (!isActive) { G.data.activeOrder = ord.id; saveData(); renderOrders(); }
+    };
+    el.appendChild(card);
+  });
+}
+
+// ====== SHOP ======
+function renderShop() {
+  var grid = document.getElementById('shopGrid');
+  grid.innerHTML = '';
+  INGREDIENTS.forEach(function(ing) {
+    if (ing.hidden) return; // Скрываем томатную пасту и сыр из магазина
+    var canBuy = G.data.stars >= ing.price;
+    var card = document.createElement('div');
+    card.className = 'item-card';
+    card.innerHTML = '<div class="item-icon">' + ing.icon + '</div>'
+      + '<div class="item-name">' + ing.name + '</div>'
+      + '<div class="item-price">' + (ing.price === 0 ? '∞ Бесплатно' : ing.price + ' ⭐') + '</div>';
+    var btn = document.createElement('button');
+    btn.className = 'btn ' + (canBuy ? 'btn-green' : 'btn-red');
+    btn.textContent = ing.price === 0 ? 'Бесплатно' : 'Купить';
+    btn.disabled = !canBuy && ing.price > 0;
+    btn.onclick = function() {
+      if (ing.price > 0 && G.data.stars < ing.price) { alert('Мало звёзд!'); return; }
+      G.data.stars -= ing.price;
+      G.data.inventory[ing.name] = (G.data.inventory[ing.name] || 0) + 1;
+      updateStats(); renderShop(); renderInventory(); renderIngredients(); saveData();
+    };
+    card.appendChild(btn);
+    grid.appendChild(card);
+  });
+}
+
+// ====== INVENTORY ======
+function renderInventory() {
+  var grid = document.getElementById('invGrid');
+  var items = INGREDIENTS.filter(function(i){ return !i.hidden && (G.data.inventory[i.name] || 0) > 0; });
+  if (items.length === 0) {
+    grid.innerHTML = '<div class="empty"><div class="empty-icon">📦</div><p>Инвентарь пуст<br>Купи что-нибудь в магазине!</p></div>';
+    return;
+  }
+  grid.innerHTML = '';
+  items.forEach(function(ing) {
+    var card = document.createElement('div');
+    card.className = 'item-card';
+    card.innerHTML = '<div class="item-icon">' + ing.icon + '</div>'
+      + '<div class="item-name">' + ing.name + '</div>'
+      + '<div class="item-price">x' + G.data.inventory[ing.name] + '</div>';
+    grid.appendChild(card);
+  });
+}
+
+// ====== PROFILE & STICKER ======
+function renderProfile() {
+  document.getElementById('avatarEl').textContent = G.data.sticker || '🍕';
+  document.getElementById('profileName').textContent = G.user;
+  if (G.data.stickerLocked) {
+    document.getElementById('stickerHint').textContent = '✅ Стикер выбран навсегда';
+    document.getElementById('stickerHint').style.color = '#00b894';
+  }
+}
+
+document.getElementById('avatarEl').onclick = function() {
+  if (G.data.stickerLocked) { alert('Стикер уже выбран и не может быть изменён!'); return; }
+  var sec = document.getElementById('stickerSection');
+  sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
+  if (sec.style.display === 'block') buildStickerGrid();
+};
+
+function buildStickerGrid() {
+  selectedStickerEmoji = null;
+  document.getElementById('stickerConfirm').style.display = 'none';
+  var grid = document.getElementById('stickerGridEl');
+  grid.innerHTML = '';
+  STICKERS.forEach(function(s) {
+    var div = document.createElement('div');
+    div.className = 'sticker-item';
+    div.textContent = s;
+    div.onclick = function() {
+      selectedStickerEmoji = s;
+      document.querySelectorAll('.sticker-item').forEach(function(x){ x.style.background=''; x.style.border='2px solid transparent'; });
+      div.style.background = '#ffeaa7';
+      div.style.border = '2px solid #d63031';
+      document.getElementById('stickerConfirmText').textContent = 'Выбрать стикер ' + s + '? Это нельзя будет изменить!';
+      document.getElementById('stickerConfirm').style.display = 'block';
+    };
+    grid.appendChild(div);
+  });
+}
+
+document.getElementById('stickerYes').onclick = function() {
+  if (!selectedStickerEmoji) return;
+  G.data.sticker = selectedStickerEmoji;
+  G.data.stickerLocked = true;
+  document.getElementById('avatarEl').textContent = selectedStickerEmoji;
+  document.getElementById('stickerSection').style.display = 'none';
+  document.getElementById('stickerConfirm').style.display = 'none';
+  document.getElementById('stickerHint').textContent = '✅ Стикер выбран навсегда';
+  document.getElementById('stickerHint').style.color = '#00b894';
+  saveData();
+};
+
+document.getElementById('stickerNo').onclick = function() {
+  document.getElementById('stickerConfirm').style.display = 'none';
+  selectedStickerEmoji = null;
+};
+
+// ====== FRIENDS ======
+document.getElementById('searchBtn').onclick = function() { searchPlayers(); };
+document.getElementById('searchInput').onkeypress = function(e){ if(e.key==='Enter') searchPlayers(); };
+
+function searchPlayers() {
+  var query = document.getElementById('searchInput').value.trim().toLowerCase();
+  var users = getUsers();
+  var res = document.getElementById('searchResults');
+  var matches = Object.keys(users).filter(function(u){
+    return u !== G.user && (query === '' || u.toLowerCase().includes(query));
+  });
+  if (matches.length === 0) {
+    res.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><p>Игроки не найдены<br>Зарегистрируй друга и ищи его здесь!</p></div>';
+    return;
+  }
+  res.innerHTML = '<h4 style="margin-bottom:10px;">Найдено игроков: ' + matches.length + '</h4>';
+  matches.forEach(function(username) {
+    var isFriend = G.data.friends.includes(username);
+    var sentReq = users[username].friendRequests && users[username].friendRequests.includes(G.user);
+    var card = document.createElement('div');
+    card.className = 'friend-card';
+    var sticker = users[username].sticker || '🍕';
+    card.innerHTML = '<div class="friend-left"><div class="friend-avatar">' + sticker + '</div><div><div class="friend-name">' + username + '</div><div class="friend-stars">⭐ ' + (users[username].stars||0) + '</div></div></div>';
+    var right = document.createElement('div');
+    if (isFriend) {
+      right.innerHTML = '<span style="color:#00b894;font-weight:700;">✅ Друзья</span>';
+    } else if (sentReq) {
+      right.innerHTML = '<span style="color:#b2bec3;">⏳ Запрос отправлен</span>';
+    } else {
+      var btn = document.createElement('button');
+      btn.className = 'btn btn-green';
+      btn.textContent = '➕ Добавить';
+      btn.onclick = function() {
+        var u2 = getUsers();
+        if (!u2[username].friendRequests) u2[username].friendRequests = [];
+        if (!u2[username].friendRequests.includes(G.user)) {
+          u2[username].friendRequests.push(G.user);
+          saveUsers(u2);
+          alert('✅ Запрос отправлен ' + username + '!');
+          searchPlayers();
+        }
+      };
+      right.appendChild(btn);
+    }
+    card.appendChild(right);
+    res.appendChild(card);
+  });
+}
+
+function renderFriends() {
+  var el = document.getElementById('friendsList');
+  document.getElementById('friendsCount').textContent = G.data.friends.length;
+  var users = getUsers();
+  el.innerHTML = '';
+
+  // Incoming requests
+  if (G.data.friendRequests && G.data.friendRequests.length > 0) {
+    var reqTitle = document.createElement('h4');
+    reqTitle.style.marginBottom = '8px';
+    reqTitle.textContent = '📬 Входящие запросы:';
+    el.appendChild(reqTitle);
+
+    G.data.friendRequests.forEach(function(from) {
+      var sticker = users[from] ? (users[from].sticker||'🍕') : '🍕';
+      var card = document.createElement('div');
+      card.className = 'friend-card request';
+      card.innerHTML = '<div class="friend-left"><div class="friend-avatar">' + sticker + '</div><div class="friend-name">' + from + '</div></div>';
+      var btns = document.createElement('div');
+      btns.style.cssText = 'display:flex;gap:6px;';
+      var yes = document.createElement('button');
+      yes.className = 'btn btn-green'; yes.textContent = '✅ Принять';
+      yes.onclick = function() {
+        var u2 = getUsers();
+        if (!u2[G.user].friends) u2[G.user].friends = [];
+        if (!u2[from].friends) u2[from].friends = [];
+        u2[G.user].friends.push(from);
+        u2[from].friends.push(G.user);
+        u2[G.user].friendRequests = u2[G.user].friendRequests.filter(function(x){ return x !== from; });
+        saveUsers(u2);
+        G.data = u2[G.user];
+        renderFriends();
+        searchPlayers();
+      };
+      var no = document.createElement('button');
+      no.className = 'btn btn-red'; no.textContent = '❌';
+      no.onclick = function() {
+        var u2 = getUsers();
+        u2[G.user].friendRequests = u2[G.user].friendRequests.filter(function(x){ return x !== from; });
+        saveUsers(u2);
+        G.data = u2[G.user];
+        renderFriends();
+      };
+      btns.appendChild(yes); btns.appendChild(no);
+      card.appendChild(btns);
+      el.appendChild(card);
+    });
+
+    var hr = document.createElement('hr');
+    hr.style.margin = '12px 0';
+    el.appendChild(hr);
+  }
+
+  if (G.data.friends.length === 0) {
+    var empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.innerHTML = '<div class="empty-icon">👥</div><p>Нет друзей пока<br>Все игроки показаны выше!</p>';
+    el.appendChild(empty);
+  } else {
+    G.data.friends.forEach(function(fname) {
+      var fu = users[fname];
+      var sticker = fu ? (fu.sticker||'🍕') : '🍕';
+      var card = document.createElement('div');
+      card.className = 'friend-card';
+      card.innerHTML = '<div class="friend-left"><div class="friend-avatar">' + sticker + '</div><div><div class="friend-name">' + fname + '</div><div class="friend-stars">⭐ ' + (fu ? fu.stars : 0) + '</div></div></div>';
+      var btn = document.createElement('button');
+      btn.className = 'btn btn-red'; btn.textContent = '🗑️';
+      btn.onclick = function() {
+        var u2 = getUsers();
+        u2[G.user].friends = u2[G.user].friends.filter(function(x){ return x !== fname; });
+        if (u2[fname]) u2[fname].friends = u2[fname].friends.filter(function(x){ return x !== G.user; });
+        saveUsers(u2);
+        G.data = u2[G.user];
+        renderFriends();
+        searchPlayers();
+      };
+      card.appendChild(btn);
+      el.appendChild(card);
+    });
+  }
+}
+
+// ====== CLANS ======
+function renderClan() {
+  var el = document.getElementById('clanContent');
+  var clans = getClans();
+
+  if (!G.data.clan) {
+    el.innerHTML = '';
+    var empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.innerHTML = '<div class="empty-icon">🏰</div><p>У тебя нет клана</p>';
+    el.appendChild(empty);
+
+    var form = document.createElement('div');
+    form.className = 'create-clan-form';
+    form.innerHTML = '<h3 style="margin-bottom:12px;">➕ Создать клан</h3>'
+      + '<input type="text" id="clanNameInput" placeholder="Название клана (мин. 3 символа)">'
+      + '<p style="margin-bottom:8px; font-weight:700;">Выбери эмодзи:</p>';
+    var pick = document.createElement('div');
+    pick.className = 'emoji-pick';
+    CLAN_EMOJIS.forEach(function(e) {
+      var d = document.createElement('div');
+      d.textContent = e;
+      if (e === selectedClanEmoji) d.classList.add('picked');
+      d.onclick = function() {
+        selectedClanEmoji = e;
+        document.querySelectorAll('.emoji-pick div').forEach(function(x){ x.classList.remove('picked'); });
+        d.classList.add('picked');
+      };
+      pick.appendChild(d);
+    });
+    form.appendChild(pick);
+    var btn = document.createElement('button');
+    btn.className = 'btn btn-green'; btn.textContent = '✅ Создать клан';
+    btn.style.marginTop = '12px'; btn.style.width = '100%';
+    btn.onclick = function() {
+      var name = document.getElementById('clanNameInput').value.trim();
+      if (name.length < 3) { alert('Название минимум 3 символа!'); return; }
+      var clans2 = getClans();
+      var id = 'clan_' + Date.now();
+      clans2[id] = { name:name, emoji:selectedClanEmoji, leader:G.user, members:[G.user] };
+      saveClans(clans2);
+      G.data.clan = id;
+      saveData();
+      renderClan();
+      alert('✅ Клан "' + name + '" создан!');
+    };
+    form.appendChild(btn);
+    el.appendChild(form);
+    return;
+  }
+
+  var clan = clans[G.data.clan];
+  if (!clan) { G.data.clan = null; saveData(); renderClan(); return; }
+  var isLeader = clan.leader === G.user;
+
+  el.innerHTML = '';
+  var box = document.createElement('div');
+  box.className = 'clan-box';
+  box.innerHTML = '<div class="clan-box-header"><span class="clan-big-emoji">' + clan.emoji + '</span><div class="clan-big-name">' + clan.name + '</div><p>' + clan.members.length + ' участников</p></div>'
+    + '<h4 style="margin-bottom:10px;">👥 Участники:</h4>';
+  clan.members.forEach(function(m) {
+    var users = getUsers();
+    var msticker = users[m] ? (users[m].sticker||'🍕') : '🍕';
+    var row = document.createElement('div');
+    row.className = 'clan-member';
+    row.innerHTML = '<span>' + msticker + ' ' + m + (m === clan.leader ? ' 👑' : '') + '</span>';
+    if (isLeader && m !== G.user) {
+      var rb = document.createElement('button');
+      rb.className = 'btn btn-red'; rb.textContent = 'Удалить'; rb.style.padding = '5px 10px';
+      rb.onclick = function() {
+        if (!confirm('Удалить ' + m + ' из клана?')) return;
+        var c2 = getClans(); var u2 = getUsers();
+        c2[G.data.clan].members = c2[G.data.clan].members.filter(function(x){ return x !== m; });
+        if (u2[m]) u2[m].clan = null;
+        saveClans(c2); saveUsers(u2);
+        renderClan();
+      };
+      row.appendChild(rb);
+    }
+    box.appendChild(row);
+  });
+  el.appendChild(box);
+
+  // Leave / Disband
+  var leaveBtn = document.createElement('button');
+  leaveBtn.className = 'btn btn-red'; leaveBtn.style.width = '100%'; leaveBtn.style.marginTop = '12px';
+  leaveBtn.textContent = isLeader ? '🗑️ Распустить клан' : '🚪 Покинуть клан';
+  leaveBtn.onclick = function() {
+    if (!confirm(isLeader ? 'Распустить клан?' : 'Покинуть клан?')) return;
+    var c2 = getClans(); var u2 = getUsers();
+    if (isLeader) {
+      c2[G.data.clan].members.forEach(function(m){ if(u2[m]) u2[m].clan = null; });
+      delete c2[G.data.clan];
+    } else {
+      c2[G.data.clan].members = c2[G.data.clan].members.filter(function(x){ return x !== G.user; });
+      u2[G.user].clan = null;
+    }
+    saveClans(c2); saveUsers(u2);
+    G.data.clan = null; saveData();
+    renderClan();
+  };
+  el.appendChild(leaveBtn);
+}
+
+})();
+
+</script>
+</body>
+</html>
